@@ -1,0 +1,196 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=referrer content="no-referrer-when-downgrade"><title>单例模式 | 象帝浮华生</title><meta property="og:title" content="单例模式 - 象帝浮华生"><meta property="og:type" content="article"><meta property="article:published_time" content="2017-10-09T16:24:48+08:00"><meta property="article:modified_time" content="2017-10-09T16:24:48+08:00"><meta name=Keywords content="Java 敏捷搜索"><meta name=description content="单例模式"><meta name=author content="象帝浮华生"><meta property="og:url" content="https://www.ahianzhang.com/post/design-pattern/"><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><link rel=stylesheet href=/css/normalize.css><link rel=stylesheet href=/css/style.css><script type=text/javascript src=//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js></script><link rel=stylesheet href=/css/douban.css><link rel=stylesheet href=/css/other.css></head><body><header id=header class=clearfix><div class=container><div class=col-group><div class=site-name><a id=logo href=https://www.ahianzhang.com>象帝浮华生</a><p class=description>大道至简</p></div><div><nav id=nav-menu class=clearfix><a class=current href=https://www.ahianzhang.com>首页</a>
+<a href=https://www.ahianzhang.com/archives/ title=归档>归档</a>
+<a href=https://www.ahianzhang.com/about/ title=关于>关于</a></nav></div></div></div></header><div id=body><div class=container><div class=col-group><div class=col-8 id=main><div class=res-cons><style type=text/css>.post-toc{position:fixed;width:200px;margin-left:-210px;padding:5px 10px;font-family:Athelas,STHeiti,Microsoft Yahei,serif;font-size:12px;border:1px solid rgba(0,0,0,.07);border-radius:5px;background-color:rgba(255,255,255,.98);background-clip:padding-box;-webkit-box-shadow:1px 1px 2px rgba(0,0,0,.125);box-shadow:1px 1px 2px rgba(0,0,0,.125);word-wrap:break-word;white-space:nowrap;-webkit-box-sizing:border-box;box-sizing:border-box;z-index:999;cursor:pointer;max-height:70%;overflow-y:auto;overflow-x:hidden}.post-toc .post-toc-title{width:100%;margin:0 auto;font-size:20px;font-weight:400;text-transform:uppercase;text-align:center}.post-toc .post-toc-content{font-size:15px}.post-toc .post-toc-content>nav>ul{margin:10px 0}.post-toc .post-toc-content ul{padding-left:20px;list-style:square;margin:.5em;line-height:1.8em}.post-toc .post-toc-content ul ul{padding-left:15px;display:none}@media print,screen and (max-width:1057px){.post-toc{display:none}}</style><div class=post-toc style=position:absolute;top:188px><h2 class=post-toc-title>文章目录</h2><div class=post-toc-content><nav id=TableOfContents><ul><li><a href=#饿汉模式>饿汉模式</a></li><li><a href=#懒汉模式>懒汉模式</a></li></ul></nav></div></div><script type=text/javascript>$(document).ready(function(){var postToc=$(".post-toc");if(postToc.length){var leftPos=$("#main").offset().left;if(leftPos<220){postToc.css({"width":leftPos-10,"margin-left":(0-leftPos)})}
+var t=postToc.offset().top-20,a={start:{position:"absolute",top:t},process:{position:"fixed",top:20},};$(window).scroll(function(){var e=$(window).scrollTop();e<t?postToc.css(a.start):postToc.css(a.process)})}})</script><article class=post><header><h1 class=post-title>单例模式</h1></header><date class="post-meta meta-date">2017年10月9日</date><div class=post-meta><span>|</span>
+<span class=meta-category><a href=/categories/%E6%9E%B6%E6%9E%84>架构</a></span></div><div class=post-meta><span id=busuanzi_container_page_pv>|<span id=busuanzi_value_page_pv></span><span>
+阅读</span></span></div><div class=post-content><p>单例模式Singleton
+作用：保证整个应用程序中某个实例有且只有一个
+类型：饿汉模式和懒汉模式</p><p>首先创建一个Pattern类，什么都不写。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=color:#000;font-weight:700>package</span> <span style=color:#555>top.richmanroad.demo</span><span style=color:#000;font-weight:700>;</span>
+
+<span style=color:#000;font-weight:700>public</span> <span style=color:#000;font-weight:700>class</span> <span style=color:#458;font-weight:700>Pattern</span> <span style=color:#000;font-weight:700>{</span>
+
+<span style=color:#000;font-weight:700>}</span>
+</code></pre></td></tr></table></div></div><p>再新建一个测试Test类</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=color:#000;font-weight:700>package</span> <span style=color:#555>top.richmanroad.demo</span><span style=color:#000;font-weight:700>;</span>
+
+<span style=color:#000;font-weight:700>public</span> <span style=color:#000;font-weight:700>class</span> <span style=color:#458;font-weight:700>Test</span> <span style=color:#000;font-weight:700>{</span>
+<span style=color:#000;font-weight:700>public</span> <span style=color:#000;font-weight:700>static</span> <span style=color:#458;font-weight:700>void</span> <span style=color:#900;font-weight:700>main</span><span style=color:#000;font-weight:700>(</span>String<span style=color:#000;font-weight:700>[]</span> args<span style=color:#000;font-weight:700>)</span> <span style=color:#000;font-weight:700>{</span>
+    
+    Pattern pt1<span style=color:#000;font-weight:700>=</span><span style=color:#000;font-weight:700>new</span> Pattern<span style=color:#000;font-weight:700>();</span>
+    Pattern pt2<span style=color:#000;font-weight:700>=</span><span style=color:#000;font-weight:700>new</span> Pattern<span style=color:#000;font-weight:700>();</span>
+    Pattern pt3<span style=color:#000;font-weight:700>=</span><span style=color:#000;font-weight:700>new</span> Pattern<span style=color:#000;font-weight:700>();</span>
+    System<span style=color:#000;font-weight:700>.</span><span style=color:teal>out</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>println</span><span style=color:#000;font-weight:700>(</span>pt1<span style=color:#000;font-weight:700>);</span>
+    System<span style=color:#000;font-weight:700>.</span><span style=color:teal>out</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>println</span><span style=color:#000;font-weight:700>(</span>pt2<span style=color:#000;font-weight:700>);</span>
+    System<span style=color:#000;font-weight:700>.</span><span style=color:teal>out</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>println</span><span style=color:#000;font-weight:700>(</span>pt3<span style=color:#000;font-weight:700>);</span>
+<span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span>
+</code></pre></td></tr></table></div></div><p>控制台输出结果</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>top<span style=color:#000;font-weight:700>.</span><span style=color:teal>richmanroad</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>demo</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>Pattern</span><span style=color:#3c5d5d;font-weight:700>@15db9742</span>
+top<span style=color:#000;font-weight:700>.</span><span style=color:teal>richmanroad</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>demo</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>Pattern</span><span style=color:#3c5d5d;font-weight:700>@6d06d69c</span>
+top<span style=color:#000;font-weight:700>.</span><span style=color:teal>richmanroad</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>demo</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>Pattern</span><span style=color:#3c5d5d;font-weight:700>@7852e922</span>
+</code></pre></td></tr></table></div></div><p>可以看出其三次输出的地址不相同，说明此时创建了三个不同的实例</p><h2 id=饿汉模式>饿汉模式</h2><p>将构造方法私有化，不能被外部直接创建对象，此时在Test类中就不能直接实例化对象了，然后在Pattern类中创建唯一的实例，并且将其变为类的成员(static将方法变为类所有),这样在Test类中可以直接使用；类名.成员名来获取对象。此时Pattern类如下：</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">8
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=color:#000;font-weight:700>package</span> <span style=color:#555>top.richmanroad.demo</span><span style=color:#000;font-weight:700>;</span>
+
+<span style=color:#000;font-weight:700>public</span> <span style=color:#000;font-weight:700>class</span> <span style=color:#458;font-weight:700>Pattern</span> <span style=color:#000;font-weight:700>{</span>
+<span style=color:#998;font-style:italic>//将构造方法私有化，不能被外部直接创建对象
+</span><span style=color:#998;font-style:italic></span>    <span style=color:#000;font-weight:700>private</span> <span style=color:#900;font-weight:700>Pattern</span><span style=color:#000;font-weight:700>(){}</span>
+<span style=color:#998;font-style:italic>//创建类的唯一实例
+</span><span style=color:#998;font-style:italic></span>    <span style=color:#000;font-weight:700>static</span> Pattern instance<span style=color:#000;font-weight:700>=</span><span style=color:#000;font-weight:700>new</span> Pattern<span style=color:#000;font-weight:700>();</span>
+<span style=color:#000;font-weight:700>}</span>
+</code></pre></td></tr></table></div></div><p>Test类：</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=color:#000;font-weight:700>package</span> <span style=color:#555>top.richmanroad.demo</span><span style=color:#000;font-weight:700>;</span>
+
+<span style=color:#000;font-weight:700>public</span> <span style=color:#000;font-weight:700>class</span> <span style=color:#458;font-weight:700>Test</span> <span style=color:#000;font-weight:700>{</span>
+<span style=color:#000;font-weight:700>public</span> <span style=color:#000;font-weight:700>static</span> <span style=color:#458;font-weight:700>void</span> <span style=color:#900;font-weight:700>main</span><span style=color:#000;font-weight:700>(</span>String<span style=color:#000;font-weight:700>[]</span> args<span style=color:#000;font-weight:700>)</span> <span style=color:#000;font-weight:700>{</span>
+    
+    Pattern pt1<span style=color:#000;font-weight:700>=</span>Pattern<span style=color:#000;font-weight:700>.</span><span style=color:teal>instance</span><span style=color:#000;font-weight:700>;</span>
+    Pattern pt2<span style=color:#000;font-weight:700>=</span>Pattern<span style=color:#000;font-weight:700>.</span><span style=color:teal>instance</span><span style=color:#000;font-weight:700>;</span>
+    Pattern pt3<span style=color:#000;font-weight:700>=</span>Pattern<span style=color:#000;font-weight:700>.</span><span style=color:teal>instance</span><span style=color:#000;font-weight:700>;</span>
+    System<span style=color:#000;font-weight:700>.</span><span style=color:teal>out</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>println</span><span style=color:#000;font-weight:700>(</span>pt1<span style=color:#000;font-weight:700>);</span>
+    System<span style=color:#000;font-weight:700>.</span><span style=color:teal>out</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>println</span><span style=color:#000;font-weight:700>(</span>pt2<span style=color:#000;font-weight:700>);</span>
+    System<span style=color:#000;font-weight:700>.</span><span style=color:teal>out</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>println</span><span style=color:#000;font-weight:700>(</span>pt3<span style=color:#000;font-weight:700>);</span>
+<span style=color:#000;font-weight:700>}</span>
+<span style=color:#000;font-weight:700>}</span>
+</code></pre></td></tr></table></div></div><p>控制台输出结果：</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>top<span style=color:#000;font-weight:700>.</span><span style=color:teal>richmanroad</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>demo</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>Pattern</span><span style=color:#3c5d5d;font-weight:700>@15db9742</span>
+top<span style=color:#000;font-weight:700>.</span><span style=color:teal>richmanroad</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>demo</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>Pattern</span><span style=color:#3c5d5d;font-weight:700>@15db9742</span>
+top<span style=color:#000;font-weight:700>.</span><span style=color:teal>richmanroad</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>demo</span><span style=color:#000;font-weight:700>.</span><span style=color:teal>Pattern</span><span style=color:#3c5d5d;font-weight:700>@15db9742</span>
+</code></pre></td></tr></table></div></div><p>可以看出三者的地址指向一处，说明此时只创建了一个实例。</p><p>接下来为了安全，需要将对Pattern类进行封装(面向对象思想)，此时我们的Pattern类就变成了如下内容</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=color:#000;font-weight:700>package</span> <span style=color:#555>top.richmanroad.demo</span><span style=color:#000;font-weight:700>;</span>
+
+<span style=color:#000;font-weight:700>public</span> <span style=color:#000;font-weight:700>class</span> <span style=color:#458;font-weight:700>Pattern</span> <span style=color:#000;font-weight:700>{</span>
+<span style=color:#998;font-style:italic>//将构造方法私有化，不能被外部直接创建对象
+</span><span style=color:#998;font-style:italic></span>    <span style=color:#000;font-weight:700>private</span> <span style=color:#900;font-weight:700>Pattern</span><span style=color:#000;font-weight:700>(){}</span>
+<span style=color:#998;font-style:italic>//创建类的唯一实例
+</span><span style=color:#998;font-style:italic></span> <span style=color:#000;font-weight:700>private</span> <span style=color:#000;font-weight:700>static</span> Pattern instance<span style=color:#000;font-weight:700>=</span><span style=color:#000;font-weight:700>new</span> Pattern<span style=color:#000;font-weight:700>();</span>
+<span style=color:#998;font-style:italic>//提供一个用于获取实例的方法
+</span><span style=color:#998;font-style:italic></span> <span style=color:#000;font-weight:700>public</span> <span style=color:#000;font-weight:700>static</span> Pattern <span style=color:#900;font-weight:700>getInstance</span><span style=color:#000;font-weight:700>(){</span>
+     <span style=color:#000;font-weight:700>return</span> instance<span style=color:#000;font-weight:700>;</span>
+ <span style=color:#000;font-weight:700>}</span>
+    
+<span style=color:#000;font-weight:700>}</span>
+</code></pre></td></tr></table></div></div><p>Test类修改内容并输出，结果同上</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>Pattern pt1<span style=color:#000;font-weight:700>=</span>Pattern<span style=color:#000;font-weight:700>.</span><span style=color:teal>getInstance</span><span style=color:#000;font-weight:700>();</span>
+</code></pre></td></tr></table></div></div><p>上面这种方法为饿汉模式，意思大致为:static为静态修饰符，当Pattern类加载时它就会创建一个唯一的实例，不管后面有没有调用，都随类一起产生。</p><h2 id=懒汉模式>懒汉模式</h2><p>LazyPattern类</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=color:#000;font-weight:700>package</span> <span style=color:#555>top.richmanroad.demo</span><span style=color:#000;font-weight:700>;</span>
+
+<span style=color:#000;font-weight:700>public</span> <span style=color:#000;font-weight:700>class</span> <span style=color:#458;font-weight:700>LazyPattern</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#998;font-style:italic>//构造方法私有化
+</span><span style=color:#998;font-style:italic></span><span style=color:#000;font-weight:700>private</span> <span style=color:#900;font-weight:700>LazyPattern</span><span style=color:#000;font-weight:700>(){</span>
+<span style=color:#000;font-weight:700>}</span>
+<span style=color:#998;font-style:italic>//声明类的唯一实例，使用private修饰
+</span><span style=color:#998;font-style:italic></span><span style=color:#000;font-weight:700>private</span> <span style=color:#000;font-weight:700>static</span> LazyPattern instance<span style=color:#000;font-weight:700>;</span>
+<span style=color:#998;font-style:italic>//提供一个用于获取实例的方法，使用public static修饰
+</span><span style=color:#998;font-style:italic></span><span style=color:#000;font-weight:700>public</span> <span style=color:#000;font-weight:700>static</span> LazyPattern <span style=color:#900;font-weight:700>getInstance</span><span style=color:#000;font-weight:700>()</span> <span style=color:#000;font-weight:700>{</span>
+    <span style=color:#000;font-weight:700>if</span><span style=color:#000;font-weight:700>(</span>instance<span style=color:#000;font-weight:700>==</span><span style=color:#000;font-weight:700>null</span><span style=color:#000;font-weight:700>){</span>
+        instance<span style=color:#000;font-weight:700>=</span><span style=color:#000;font-weight:700>new</span> LazyPattern<span style=color:#000;font-weight:700>();</span>
+    <span style=color:#000;font-weight:700>}</span>
+    <span style=color:#000;font-weight:700>return</span> instance<span style=color:#000;font-weight:700>;</span>
+<span style=color:#000;font-weight:700>}</span>
+
+<span style=color:#000;font-weight:700>}</span>
+</code></pre></td></tr></table></div></div><p>类中只是声明了一个唯一的实例，并没有创建，只有当用户获取实例时才去判断这个实例是否为空</p><table><thead><tr><th style=text-align:center></th><th style=text-align:center>饿汉模式</th><th style=text-align:center>懒汉模式</th></tr></thead><tbody><tr><td style=text-align:center>区别</td><td style=text-align:center>加载时速度慢，运行时获取对象比较快</td><td style=text-align:center>加载速度快，运行时获取对象速度比较慢</td></tr><tr><td style=text-align:center>线程</td><td style=text-align:center>安全</td><td style=text-align:center>不安全</td></tr></tbody></table></div><div class=post-archive><ul class=post-copyright><li><strong>原文作者：</strong><a rel=author href=https://www.ahianzhang.com>象帝浮华生</a></li><li style=word-break:break-all><strong>原文链接：</strong><a href=https://www.ahianzhang.com/post/design-pattern/>https://www.ahianzhang.com/post/design-pattern/</a></li><li><strong>版权声明：</strong>本作品采用<a rel=license href=https://creativecommons.org/licenses/by-nc-nd/4.0/>知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li></ul></div><br><div class=post-archive><h2>See Also</h2><ul class=listing><li><a href=/post/web-1/>tor 使用</a></li><li><a href=/archives/>归档</a></li><li><a href=/search/>搜索</a></li></ul></div><div class="post-meta meta-tags"><ul class=clearfix><li><a href=/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F>设计模式</a></li></ul></div></article><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return;}
+var d=document,s=d.createElement('script');s.async=true;s.src='//'+"AhianZhang"+'.disqus.com/embed.js';s.setAttribute('data-timestamp',+new Date());(d.head||d.body).appendChild(s);})();</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><footer id=footer><div>&copy; 2021 <a href=https://www.ahianzhang.com>象帝浮华生 By 象帝浮华生</a></div><br><div><div class=github-badge><a href=https://gohugo.io/ target=_black rel=nofollow><span class=badge-subject>Powered by</span><span class="badge-value bg-blue">Hugo</span></a></div><div class=github-badge><a href=https://www.flysnow.org/ target=_black><span class=badge-subject>Design by</span><span class="badge-value bg-brightgreen">飞雪无情</span></a></div><div class=github-badge><a href=https://github.com/flysnow-org/maupassant-hugo target=_black><span class=badge-subject>Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a></div></div></footer><script type=text/javascript>window.MathJax={tex2jax:{inlineMath:[['$','$']],processEscapes:true}};</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script><a id=rocket href=#top></a><script type=text/javascript src="/js/totop.js?v=0.0.0" async></script><script type=text/javascript src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js async></script><script src=/js/douban.js></script></div><div id=secondary><section class=widget><form id=search action=https://www.ahianzhang.com/search/ method=get accept-charset=utf-8 target=_blank _lpchecked=1><input type=text name=q maxlength=20 placeholder=Search>
+<input type=hidden name=sitesearch value=https://www.ahianzhang.com>
+<button type=submit class="submit icon-search"></button></form></section><section class=widget><h3 class=widget-title>最近文章</h3><ul class=widget-list><li><a href=https://www.ahianzhang.com/post/spring-boot-cucumber/ title="使用 cucumber 进行行为驱动开发（BDD）">使用 cucumber 进行行为驱动开发（BDD）</a></li><li><a href=https://www.ahianzhang.com/post/spring-cloud-intergration/ title="微服务应用集成 SpringCloud 步骤">微服务应用集成 SpringCloud 步骤</a></li><li><a href=https://www.ahianzhang.com/post/change-data-capture/ title=电商搜索数据同步方案>电商搜索数据同步方案</a></li><li><a href=https://www.ahianzhang.com/post/summary14/ title=通过一道数值转换题重温计算机补码>通过一道数值转换题重温计算机补码</a></li><li><a href=https://www.ahianzhang.com/post/macos-tools/ title="macOS 系统推荐的一些软件">macOS 系统推荐的一些软件</a></li><li><a href=https://www.ahianzhang.com/post/devops-01/ title="DevOps 实施规划（持续更新）">DevOps 实施规划（持续更新）</a></li><li><a href=https://www.ahianzhang.com/post/rabbitmq-reliability/ title="rabbitmq 如何提高可靠性并保证消费端幂等">rabbitmq 如何提高可靠性并保证消费端幂等</a></li><li><a href=https://www.ahianzhang.com/post/rabbit-mq-basic-concept/ title="AMQ Model总结">AMQ Model总结</a></li><li><a href=https://www.ahianzhang.com/post/pair-programming/ title=结对编程>结对编程</a></li><li><a href=https://www.ahianzhang.com/post/rsocket-intro/ title="RSocket 介绍">RSocket 介绍</a></li></ul></section><section class=widget><h3 class=widget-title><a href=/categories/>分类</a></h3><ul class=widget-list><li><a href=https://www.ahianzhang.com/categories/DDD/>DDD (1)</a></li><li><a href=https://www.ahianzhang.com/categories/DevOps/>DevOps (1)</a></li><li><a href=https://www.ahianzhang.com/categories/TDD/>TDD (1)</a></li><li><a href=https://www.ahianzhang.com/categories/XP/>XP (1)</a></li><li><a href=https://www.ahianzhang.com/categories/%E5%8D%8F%E8%AE%AE/>协议 (2)</a></li><li><a href=https://www.ahianzhang.com/categories/%E6%80%BB%E7%BB%93/>总结 (17)</a></li><li><a href=https://www.ahianzhang.com/categories/%E6%90%9C%E7%B4%A2/>搜索 (6)</a></li><li><a href=https://www.ahianzhang.com/categories/%E6%9E%B6%E6%9E%84/>架构 (16)</a></li><li><a href=https://www.ahianzhang.com/categories/%E7%AE%97%E6%B3%95/>算法 (6)</a></li></ul></section><section class=widget><h3 class=widget-title><a href=/tags/>标签</a></h3><div class=tagcloud><a href=https://www.ahianzhang.com/tags/BDD/>BDD</a>
+<a href=https://www.ahianzhang.com/tags/Cucumber/>Cucumber</a>
+<a href=https://www.ahianzhang.com/tags/ElasticSearch/>ElasticSearch</a>
+<a href=https://www.ahianzhang.com/tags/LeetCode/>LeetCode</a>
+<a href=https://www.ahianzhang.com/tags/SpringCloud/>SpringCloud</a>
+<a href=https://www.ahianzhang.com/tags/devops/>devops</a>
+<a href=https://www.ahianzhang.com/tags/macOS/>macOS</a>
+<a href=https://www.ahianzhang.com/tags/nat/>nat</a>
+<a href=https://www.ahianzhang.com/tags/os/>os</a>
+<a href=https://www.ahianzhang.com/tags/rabbitmq/>rabbitmq</a>
+<a href=https://www.ahianzhang.com/tags/rsocket/>rsocket</a>
+<a href=https://www.ahianzhang.com/tags/tor/>tor</a>
+<a href=https://www.ahianzhang.com/tags/%E5%88%9B%E4%B8%9A/>创业</a>
+<a href=https://www.ahianzhang.com/tags/%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/>工作总结</a>
+<a href=https://www.ahianzhang.com/tags/%E5%B9%B3%E5%8F%B0%E6%9E%B6%E6%9E%84/>平台架构</a>
+<a href=https://www.ahianzhang.com/tags/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/>年终总结</a>
+<a href=https://www.ahianzhang.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/>微服务</a>
+<a href=https://www.ahianzhang.com/tags/%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/>性能调优</a>
+<a href=https://www.ahianzhang.com/tags/%E6%8A%80%E6%9C%AF/>技术</a>
+<a href=https://www.ahianzhang.com/tags/%E6%95%88%E7%8E%87/>效率</a>
+<a href=https://www.ahianzhang.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/>数据结构</a>
+<a href=https://www.ahianzhang.com/tags/%E6%96%B9%E6%A1%88/>方案</a>
+<a href=https://www.ahianzhang.com/tags/%E6%9E%81%E9%99%90%E7%BC%96%E7%A8%8B/>极限编程</a>
+<a href=https://www.ahianzhang.com/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/>概率论</a>
+<a href=https://www.ahianzhang.com/tags/%E6%A6%82%E8%BF%B0/>概述</a>
+<a href=https://www.ahianzhang.com/tags/%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/>测试工具</a>
+<a href=https://www.ahianzhang.com/tags/%E7%90%86%E8%AE%BA/>理论</a>
+<a href=https://www.ahianzhang.com/tags/%E7%94%9F%E6%B4%BB%E6%80%BB%E7%BB%93/>生活总结</a>
+<a href=https://www.ahianzhang.com/tags/%E7%AE%97%E6%B3%95/>算法</a>
+<a href=https://www.ahianzhang.com/tags/%E8%A1%A5%E7%A0%81/>补码</a>
+<a href=https://www.ahianzhang.com/tags/%E8%AE%A1%E5%88%92/>计划</a>
+<a href=https://www.ahianzhang.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/>设计模式</a>
+<a href=https://www.ahianzhang.com/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/>面向对象</a>
+<a href=https://www.ahianzhang.com/tags/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/>项目总结</a></div></section><section class=widget><h3 class=widget-title>友情链接</h3><ul class=widget-list><li><a target=_blank href=https://taohuawu.club title="潘少的 BLOG">潘少的 BLOG</a></li><li><a target=_blank href=http://www.hankcs.com/ title=hankcs>hankcs</a></li></ul></section><section class=widget><h3 class=widget-title>其它</h3><ul class=widget-list><li><a href=https://www.ahianzhang.com/index.xml>文章 RSS</a></li></ul></section></div></div></div></div></body></html>

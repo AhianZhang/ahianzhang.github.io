@@ -1,0 +1,126 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=referrer content="no-referrer-when-downgrade"><title>gitlab 添加代码规范检测 | 象帝浮华生</title><meta property="og:title" content="gitlab 添加代码规范检测 - 象帝浮华生"><meta property="og:type" content="article"><meta property="article:published_time" content="2019-06-19T11:00:46+08:00"><meta property="article:modified_time" content="2019-06-19T11:00:46+08:00"><meta name=Keywords content="Java 敏捷搜索"><meta name=description content="在推代码规范的路上一定要独裁"><meta name=author content="象帝浮华生"><meta property="og:url" content="https://www.ahianzhang.com/post/code-style-check-ali-p3c/"><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><link rel=stylesheet href=/css/normalize.css><link rel=stylesheet href=/css/style.css><script type=text/javascript src=//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js></script><link rel=stylesheet href=/css/douban.css><link rel=stylesheet href=/css/other.css></head><body><header id=header class=clearfix><div class=container><div class=col-group><div class=site-name><a id=logo href=https://www.ahianzhang.com>象帝浮华生</a><p class=description>大道至简</p></div><div><nav id=nav-menu class=clearfix><a class=current href=https://www.ahianzhang.com>首页</a>
+<a href=https://www.ahianzhang.com/archives/ title=归档>归档</a>
+<a href=https://www.ahianzhang.com/about/ title=关于>关于</a></nav></div></div></div></header><div id=body><div class=container><div class=col-group><div class=col-8 id=main><div class=res-cons><style type=text/css>.post-toc{position:fixed;width:200px;margin-left:-210px;padding:5px 10px;font-family:Athelas,STHeiti,Microsoft Yahei,serif;font-size:12px;border:1px solid rgba(0,0,0,.07);border-radius:5px;background-color:rgba(255,255,255,.98);background-clip:padding-box;-webkit-box-shadow:1px 1px 2px rgba(0,0,0,.125);box-shadow:1px 1px 2px rgba(0,0,0,.125);word-wrap:break-word;white-space:nowrap;-webkit-box-sizing:border-box;box-sizing:border-box;z-index:999;cursor:pointer;max-height:70%;overflow-y:auto;overflow-x:hidden}.post-toc .post-toc-title{width:100%;margin:0 auto;font-size:20px;font-weight:400;text-transform:uppercase;text-align:center}.post-toc .post-toc-content{font-size:15px}.post-toc .post-toc-content>nav>ul{margin:10px 0}.post-toc .post-toc-content ul{padding-left:20px;list-style:square;margin:.5em;line-height:1.8em}.post-toc .post-toc-content ul ul{padding-left:15px;display:none}@media print,screen and (max-width:1057px){.post-toc{display:none}}</style><div class=post-toc style=position:absolute;top:188px><h2 class=post-toc-title>文章目录</h2><div class=post-toc-content><nav id=TableOfContents><ul><li><a href=#git-custom-hooks>git custom hooks</a><ul><li><a href=#client-hooks>client hooks</a></li><li><a href=#server-hooks>server hooks</a></li></ul></li></ul></nav></div></div><script type=text/javascript>$(document).ready(function(){var postToc=$(".post-toc");if(postToc.length){var leftPos=$("#main").offset().left;if(leftPos<220){postToc.css({"width":leftPos-10,"margin-left":(0-leftPos)})}
+var t=postToc.offset().top-20,a={start:{position:"absolute",top:t},process:{position:"fixed",top:20},};$(window).scroll(function(){var e=$(window).scrollTop();e<t?postToc.css(a.start):postToc.css(a.process)})}})</script><article class=post><header><h1 class=post-title>gitlab 添加代码规范检测</h1></header><date class="post-meta meta-date">2019年6月19日</date><div class=post-meta><span>|</span>
+<span class=meta-category><a href=/categories/%E6%9E%B6%E6%9E%84>架构</a></span></div><div class=post-meta><span id=busuanzi_container_page_pv>|<span id=busuanzi_value_page_pv></span><span>
+阅读</span></span></div><div class=post-content><h1 id=环境>环境</h1><p>gitlab 10.5.X + gitlab + ali p3c.pmd</p><p>好的代码能让人赏心悦目，方便 CodeReview 进行，为此，必须强制性的将代码规范起来。</p><h1 id=如何做>如何做</h1><h2 id=git-custom-hooks>git custom hooks</h2><h3 id=client-hooks>client hooks</h3><p>客户端钩子是存在本地的，按项目去配，这样能达到目的，但是起不到强制约束的效果，而且一个一个配很麻烦</p><h3 id=server-hooks>server hooks</h3><p>服务器端的钩子，每个项目中的 git hooks 全都是软连接到 gitlab 上的一个位置，默认是在</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>/opt/gitlab/embedded/service/gitlab-shell/hooks
+</code></pre></td></tr></table></div></div><p>这个 hooks 文件夹内包括三个文件</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>.
+├── post-receive
+├── pre-receive
+└── update
+
+</code></pre></td></tr></table></div></div><ul><li>pre-receive 接收客户端推送的代码，这个脚本的功能是最后只有 exit 0 时才代表接收，所有非 0 的推送都会被拒绝</li><li>update 可以多分支的去检测，即一段代码推送到多个分支，每个分支更新代码前都会执行一次这个脚本</li><li>post-receive 这个脚本是最后执行的，主要用来记录信息及通知用，不能中断推送流程</li></ul><p>按实际需求，使用 pre-receive 脚本就能满足要求，修改脚本为如下内容：</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">35
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">36
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#999;font-weight:700;font-style:italic>#!/bin/sh
+</span><span style=color:#999;font-weight:700;font-style:italic></span><span style=color:#0086b3>export</span> <span style=color:teal>LANG</span><span style=color:#000;font-weight:700>=</span><span style=color:#d14>&#34;en_US.UTF-8&#34;</span>
+<span style=color:teal>REJECT</span><span style=color:#000;font-weight:700>=</span><span style=color:#099>0</span>
+
+<span style=color:#000;font-weight:700>while</span> <span style=color:#0086b3>read</span> oldrev newrev refname; <span style=color:#000;font-weight:700>do</span>
+    <span style=color:#000;font-weight:700>if</span> <span style=color:#000;font-weight:700>[</span> <span style=color:#d14>&#34;</span><span style=color:teal>$oldrev</span><span style=color:#d14>&#34;</span> <span style=color:#000;font-weight:700>=</span> <span style=color:#d14>&#34;0000000000000000000000000000000000000000&#34;</span> <span style=color:#000;font-weight:700>]</span>;<span style=color:#000;font-weight:700>then</span>
+        <span style=color:teal>oldrev</span><span style=color:#000;font-weight:700>=</span><span style=color:#d14>&#34;</span><span style=color:#d14>${</span><span style=color:teal>newrev</span><span style=color:#d14>}</span><span style=color:#d14>^&#34;</span>
+    <span style=color:#000;font-weight:700>fi</span>
+
+    <span style=color:teal>files</span><span style=color:#000;font-weight:700>=</span><span style=color:#d14>`</span>git diff --name-only <span style=color:#d14>${</span><span style=color:teal>oldrev</span><span style=color:#d14>}</span> <span style=color:#d14>${</span><span style=color:teal>newrev</span><span style=color:#d14>}</span>  | grep -e <span style=color:#d14>&#34;\.java</span>$<span style=color:#d14>&#34;</span><span style=color:#d14>`</span>
+
+    <span style=color:#000;font-weight:700>if</span> <span style=color:#000;font-weight:700>[</span> -n <span style=color:#d14>&#34;</span><span style=color:teal>$files</span><span style=color:#d14>&#34;</span> <span style=color:#000;font-weight:700>]</span>; <span style=color:#000;font-weight:700>then</span>
+        <span style=color:teal>TEMPDIR</span><span style=color:#000;font-weight:700>=</span><span style=color:#d14>&#34;tmp&#34;</span>
+        <span style=color:#000;font-weight:700>for</span> file in <span style=color:#d14>${</span><span style=color:teal>files</span><span style=color:#d14>}</span>; <span style=color:#000;font-weight:700>do</span>
+            mkdir -p <span style=color:#d14>&#34;</span><span style=color:#d14>${</span><span style=color:teal>TEMPDIR</span><span style=color:#d14>}</span><span style=color:#d14>/`dirname </span><span style=color:#d14>${</span><span style=color:teal>file</span><span style=color:#d14>}</span><span style=color:#d14>`&#34;</span> &gt;/dev/null
+            git show <span style=color:teal>$newrev</span>:<span style=color:teal>$file</span> &gt; <span style=color:#d14>${</span><span style=color:teal>TEMPDIR</span><span style=color:#d14>}</span>/<span style=color:#d14>${</span><span style=color:teal>file</span><span style=color:#d14>}</span>
+        <span style=color:#000;font-weight:700>done</span>;
+
+        <span style=color:teal>files_to_check</span><span style=color:#000;font-weight:700>=</span><span style=color:#d14>`</span>find <span style=color:teal>$TEMPDIR</span> -name <span style=color:#d14>&#39;*.java&#39;</span><span style=color:#d14>`</span>
+        
+        
+         /home/jdk1.8.0_212/bin/java -cp /home/p3c-pmd-1.3.6.jar net.sourceforge.pmd.PMD -d <span style=color:teal>$TEMPDIR</span> -R rulesets/java/ali-comment.xml,rulesets/java/ali-concurrent.xml,rulesets/java/ali-constant.xml,rulesets/java/ali-exception.xml,rulesets/java/ali-flowcontrol.xml,rulesets/java/ali-naming.xml,rulesets/java/ali-oop.xml,rulesets/java/ali-orm.xml,rulesets/java/ali-other.xml,rulesets/java/ali-set.xml -f text
+       
+         <span style=color:teal>REJECT</span><span style=color:#000;font-weight:700>=</span><span style=color:teal>$?</span>
+         
+         
+          <span style=color:#000;font-weight:700>if</span> <span style=color:#000;font-weight:700>[[</span> <span style=color:teal>$REJECT</span> <span style=color:#000;font-weight:700>==</span> <span style=color:#099>0</span> <span style=color:#000;font-weight:700>]]</span> ;<span style=color:#000;font-weight:700>then</span>
+            <span style=color:#0086b3>echo</span> -e <span style=color:#d14>&#34;\033[32m恭喜你代码通过质量检测！\033[0m&#34;</span>
+             <span style=color:#000;font-weight:700>else</span> <span style=color:#0086b3>echo</span> -e <span style=color:#d14>&#34;\033[31m\033[01m 请及时修改代码并再次尝试\033[0m&#34;</span> 
+          <span style=color:#000;font-weight:700>fi</span>
+     
+        rm -rf <span style=color:teal>$TEMPDIR</span>
+    <span style=color:#000;font-weight:700>fi</span>
+<span style=color:#000;font-weight:700>done</span>
+
+<span style=color:#0086b3>exit</span> <span style=color:teal>$REJECT</span>
+</code></pre></td></tr></table></div></div><p>上面代码是根据简书上的一个 blog 做了微调，如果你要用的话只需要修改 java 路径和 p3c.jar 的路径，这个脚本接受的是标准输入流，具体可以查看下方链接。</p><p>参考链接：</p><p><a href=https://www.jianshu.com/p/b87ca8615c9c>如何生成整合了阿里巴巴JAVA编码规范的PMD包配合GitLab提升团队代码质量</a></p><p><a href=https://www.jianshu.com/p/5531a21afa68>Gitlab 服务器端 custom hook 配置</a></p><p><a href=%5Bhttps://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git-%E9%92%A9%E5%AD%90%5D(https://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git-%E9%92%A9%E5%AD%90)>自定义 Git - Git 钩子</a></p><p><a href=https://gitirc.eu/githooks.html>githooks(5) Manual Page</a></p><p><a href=https://www.jianshu.com/p/de90ffbd53e9>使用git钩子对提交代码进行检查(pre-commit)</a></p></div><div class=post-archive><ul class=post-copyright><li><strong>原文作者：</strong><a rel=author href=https://www.ahianzhang.com>象帝浮华生</a></li><li style=word-break:break-all><strong>原文链接：</strong><a href=https://www.ahianzhang.com/post/code-style-check-ali-p3c/>https://www.ahianzhang.com/post/code-style-check-ali-p3c/</a></li><li><strong>版权声明：</strong>本作品采用<a rel=license href=https://creativecommons.org/licenses/by-nc-nd/4.0/>知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li></ul></div><br><div class=post-archive><h2>See Also</h2><ul class=listing><li><a href=/post/query-rewrite/>query 改写</a></li><li><a href=/post/summary10/>阶段性总结</a></li><li><a href=/post/os1/>操作系统作用</a></li><li><a href=/post/leetcode206/></a></li><li><a href=/post/leetcode461/>hamming-distance</a></li></ul></div><div class="post-meta meta-tags"><ul class=clearfix><li><a href=/tags/devops>devops</a></li></ul></div></article><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return;}
+var d=document,s=d.createElement('script');s.async=true;s.src='//'+"AhianZhang"+'.disqus.com/embed.js';s.setAttribute('data-timestamp',+new Date());(d.head||d.body).appendChild(s);})();</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><footer id=footer><div>&copy; 2021 <a href=https://www.ahianzhang.com>象帝浮华生 By 象帝浮华生</a></div><br><div><div class=github-badge><a href=https://gohugo.io/ target=_black rel=nofollow><span class=badge-subject>Powered by</span><span class="badge-value bg-blue">Hugo</span></a></div><div class=github-badge><a href=https://www.flysnow.org/ target=_black><span class=badge-subject>Design by</span><span class="badge-value bg-brightgreen">飞雪无情</span></a></div><div class=github-badge><a href=https://github.com/flysnow-org/maupassant-hugo target=_black><span class=badge-subject>Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a></div></div></footer><script type=text/javascript>window.MathJax={tex2jax:{inlineMath:[['$','$']],processEscapes:true}};</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script><a id=rocket href=#top></a><script type=text/javascript src="/js/totop.js?v=0.0.0" async></script><script type=text/javascript src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js async></script><script src=/js/douban.js></script></div><div id=secondary><section class=widget><form id=search action=https://www.ahianzhang.com/search/ method=get accept-charset=utf-8 target=_blank _lpchecked=1><input type=text name=q maxlength=20 placeholder=Search>
+<input type=hidden name=sitesearch value=https://www.ahianzhang.com>
+<button type=submit class="submit icon-search"></button></form></section><section class=widget><h3 class=widget-title>最近文章</h3><ul class=widget-list><li><a href=https://www.ahianzhang.com/post/spring-boot-cucumber/ title="使用 cucumber 进行行为驱动开发（BDD）">使用 cucumber 进行行为驱动开发（BDD）</a></li><li><a href=https://www.ahianzhang.com/post/spring-cloud-intergration/ title="微服务应用集成 SpringCloud 步骤">微服务应用集成 SpringCloud 步骤</a></li><li><a href=https://www.ahianzhang.com/post/change-data-capture/ title=电商搜索数据同步方案>电商搜索数据同步方案</a></li><li><a href=https://www.ahianzhang.com/post/summary14/ title=通过一道数值转换题重温计算机补码>通过一道数值转换题重温计算机补码</a></li><li><a href=https://www.ahianzhang.com/post/macos-tools/ title="macOS 系统推荐的一些软件">macOS 系统推荐的一些软件</a></li><li><a href=https://www.ahianzhang.com/post/devops-01/ title="DevOps 实施规划（持续更新）">DevOps 实施规划（持续更新）</a></li><li><a href=https://www.ahianzhang.com/post/rabbitmq-reliability/ title="rabbitmq 如何提高可靠性并保证消费端幂等">rabbitmq 如何提高可靠性并保证消费端幂等</a></li><li><a href=https://www.ahianzhang.com/post/rabbit-mq-basic-concept/ title="AMQ Model总结">AMQ Model总结</a></li><li><a href=https://www.ahianzhang.com/post/pair-programming/ title=结对编程>结对编程</a></li><li><a href=https://www.ahianzhang.com/post/rsocket-intro/ title="RSocket 介绍">RSocket 介绍</a></li></ul></section><section class=widget><h3 class=widget-title><a href=/categories/>分类</a></h3><ul class=widget-list><li><a href=https://www.ahianzhang.com/categories/DDD/>DDD (1)</a></li><li><a href=https://www.ahianzhang.com/categories/DevOps/>DevOps (1)</a></li><li><a href=https://www.ahianzhang.com/categories/TDD/>TDD (1)</a></li><li><a href=https://www.ahianzhang.com/categories/XP/>XP (1)</a></li><li><a href=https://www.ahianzhang.com/categories/%E5%8D%8F%E8%AE%AE/>协议 (2)</a></li><li><a href=https://www.ahianzhang.com/categories/%E6%80%BB%E7%BB%93/>总结 (17)</a></li><li><a href=https://www.ahianzhang.com/categories/%E6%90%9C%E7%B4%A2/>搜索 (6)</a></li><li><a href=https://www.ahianzhang.com/categories/%E6%9E%B6%E6%9E%84/>架构 (16)</a></li><li><a href=https://www.ahianzhang.com/categories/%E7%AE%97%E6%B3%95/>算法 (6)</a></li></ul></section><section class=widget><h3 class=widget-title><a href=/tags/>标签</a></h3><div class=tagcloud><a href=https://www.ahianzhang.com/tags/BDD/>BDD</a>
+<a href=https://www.ahianzhang.com/tags/Cucumber/>Cucumber</a>
+<a href=https://www.ahianzhang.com/tags/ElasticSearch/>ElasticSearch</a>
+<a href=https://www.ahianzhang.com/tags/LeetCode/>LeetCode</a>
+<a href=https://www.ahianzhang.com/tags/SpringCloud/>SpringCloud</a>
+<a href=https://www.ahianzhang.com/tags/devops/>devops</a>
+<a href=https://www.ahianzhang.com/tags/macOS/>macOS</a>
+<a href=https://www.ahianzhang.com/tags/nat/>nat</a>
+<a href=https://www.ahianzhang.com/tags/os/>os</a>
+<a href=https://www.ahianzhang.com/tags/rabbitmq/>rabbitmq</a>
+<a href=https://www.ahianzhang.com/tags/rsocket/>rsocket</a>
+<a href=https://www.ahianzhang.com/tags/tor/>tor</a>
+<a href=https://www.ahianzhang.com/tags/%E5%88%9B%E4%B8%9A/>创业</a>
+<a href=https://www.ahianzhang.com/tags/%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/>工作总结</a>
+<a href=https://www.ahianzhang.com/tags/%E5%B9%B3%E5%8F%B0%E6%9E%B6%E6%9E%84/>平台架构</a>
+<a href=https://www.ahianzhang.com/tags/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/>年终总结</a>
+<a href=https://www.ahianzhang.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/>微服务</a>
+<a href=https://www.ahianzhang.com/tags/%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/>性能调优</a>
+<a href=https://www.ahianzhang.com/tags/%E6%8A%80%E6%9C%AF/>技术</a>
+<a href=https://www.ahianzhang.com/tags/%E6%95%88%E7%8E%87/>效率</a>
+<a href=https://www.ahianzhang.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/>数据结构</a>
+<a href=https://www.ahianzhang.com/tags/%E6%96%B9%E6%A1%88/>方案</a>
+<a href=https://www.ahianzhang.com/tags/%E6%9E%81%E9%99%90%E7%BC%96%E7%A8%8B/>极限编程</a>
+<a href=https://www.ahianzhang.com/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/>概率论</a>
+<a href=https://www.ahianzhang.com/tags/%E6%A6%82%E8%BF%B0/>概述</a>
+<a href=https://www.ahianzhang.com/tags/%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/>测试工具</a>
+<a href=https://www.ahianzhang.com/tags/%E7%90%86%E8%AE%BA/>理论</a>
+<a href=https://www.ahianzhang.com/tags/%E7%94%9F%E6%B4%BB%E6%80%BB%E7%BB%93/>生活总结</a>
+<a href=https://www.ahianzhang.com/tags/%E7%AE%97%E6%B3%95/>算法</a>
+<a href=https://www.ahianzhang.com/tags/%E8%A1%A5%E7%A0%81/>补码</a>
+<a href=https://www.ahianzhang.com/tags/%E8%AE%A1%E5%88%92/>计划</a>
+<a href=https://www.ahianzhang.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/>设计模式</a>
+<a href=https://www.ahianzhang.com/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/>面向对象</a>
+<a href=https://www.ahianzhang.com/tags/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/>项目总结</a></div></section><section class=widget><h3 class=widget-title>友情链接</h3><ul class=widget-list><li><a target=_blank href=https://taohuawu.club title="潘少的 BLOG">潘少的 BLOG</a></li><li><a target=_blank href=http://www.hankcs.com/ title=hankcs>hankcs</a></li></ul></section><section class=widget><h3 class=widget-title>其它</h3><ul class=widget-list><li><a href=https://www.ahianzhang.com/index.xml>文章 RSS</a></li></ul></section></div></div></div></div></body></html>
