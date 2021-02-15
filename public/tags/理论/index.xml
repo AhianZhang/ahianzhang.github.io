@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>理论 on 象帝浮华生</title>
+    <link>https://www.ahianzhang.com/tags/%E7%90%86%E8%AE%BA/</link>
+    <description>Recent content in 理论 on 象帝浮华生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 18 Jun 2019 15:36:03 +0000</lastBuildDate><atom:link href="https://www.ahianzhang.com/tags/%E7%90%86%E8%AE%BA/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>query 改写</title>
+      <link>https://www.ahianzhang.com/post/query-rewrite/</link>
+      <pubDate>Tue, 18 Jun 2019 15:36:03 +0000</pubDate>
+      
+      <guid>https://www.ahianzhang.com/post/query-rewrite/</guid>
+      <description>什么是 query 改写 query 改写是搜索系统中最基础也是最重要的一个模块，简单来讲就是把用户输入的 keyword 转换成最贴近搜索系统内部的可识别的 keyword。 搜索引擎检索 keyword 的时候主要是匹配和排序，匹配也常常被称作“召回”，在搜索和推荐领域会有一个“召回率”的指标，在此不做展开。query 改写则会直接影响</description>
+    </item>
+    
+  </channel>
+</rss>

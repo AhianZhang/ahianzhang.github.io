@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>tor on 象帝浮华生</title>
+    <link>https://www.ahianzhang.com/tags/tor/</link>
+    <description>Recent content in tor on 象帝浮华生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sat, 16 Sep 2017 13:14:41 +0000</lastBuildDate><atom:link href="https://www.ahianzhang.com/tags/tor/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>tor 使用</title>
+      <link>https://www.ahianzhang.com/post/web-1/</link>
+      <pubDate>Sat, 16 Sep 2017 13:14:41 +0000</pubDate>
+      
+      <guid>https://www.ahianzhang.com/post/web-1/</guid>
+      <description>写在前面： 我写本文的目的是为了记录我所探索的世界，严禁做违法犯罪的事情，作者一直保持中立态度来学习。望来者自尊自律。 如果你只是为了翻墙，此文不适合你，我有更快的方式交给你如何使用代理。 配置 1.从Tor官网下载Tor并安装 2.运行Tor 3.你可以先尝试直接连接，如果等5分钟还没有好</description>
+    </item>
+    
+  </channel>
+</rss>

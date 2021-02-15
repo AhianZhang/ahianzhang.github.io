@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>devops on 象帝浮华生</title>
+    <link>https://www.ahianzhang.com/tags/devops/</link>
+    <description>Recent content in devops on 象帝浮华生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 19 Jun 2019 11:00:46 +0000</lastBuildDate><atom:link href="https://www.ahianzhang.com/tags/devops/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>gitlab 添加代码规范检测</title>
+      <link>https://www.ahianzhang.com/post/code-style-check-ali-p3c/</link>
+      <pubDate>Wed, 19 Jun 2019 11:00:46 +0000</pubDate>
+      
+      <guid>https://www.ahianzhang.com/post/code-style-check-ali-p3c/</guid>
+      <description>环境 gitlab 10.5.X + gitlab + ali p3c.pmd 好的代码能让人赏心悦目，方便 CodeReview 进行，为此，必须强制性的将代码规范起来。 如何做 git custom hooks client hooks 客户端钩子是存在本地的，按项目去配，这样能达到目的，但是起不到强制约束的效果，而且一个一个配很麻烦 server hooks 服务器端的钩子，每个项目中的 git hooks 全都是软连接到 gitlab 上的一个位置，默认是在 1 /opt/gitlab/embedded/service/gitlab-shell/hooks</description>
+    </item>
+    
+  </channel>
+</rss>

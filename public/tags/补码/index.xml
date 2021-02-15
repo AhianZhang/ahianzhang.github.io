@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>补码 on 象帝浮华生</title>
+    <link>https://www.ahianzhang.com/tags/%E8%A1%A5%E7%A0%81/</link>
+    <description>Recent content in 补码 on 象帝浮华生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 02 Jul 2020 10:56:53 +0000</lastBuildDate><atom:link href="https://www.ahianzhang.com/tags/%E8%A1%A5%E7%A0%81/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>通过一道数值转换题重温计算机补码</title>
+      <link>https://www.ahianzhang.com/post/summary14/</link>
+      <pubDate>Thu, 02 Jul 2020 10:56:53 +0000</pubDate>
+      
+      <guid>https://www.ahianzhang.com/post/summary14/</guid>
+      <description>问题 昨天同事和我聊了他偶然间看到的一道面试题，引出了后面的深入分析。 1 System.out.println(Integer.valueOf((char)-1)); //output: 65535 为什么输出是 65535 而不是 -1 呢？ 分析 先回顾一下计算机相关的知识点： 原码(True form) 原码是指一个二进制数左边加上符号位后所得到的码，且当二进制数大于0时，符号位为0；二进制数小于0时，符号位为1；二进制数等于0时</description>
+    </item>
+    
+  </channel>
+</rss>

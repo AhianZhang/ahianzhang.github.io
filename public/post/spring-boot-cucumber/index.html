@@ -1,0 +1,857 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>使用 cucumber 进行行为驱动开发（BDD） | 象帝浮华生</title>
+    <meta property="og:title" content="使用 cucumber 进行行为驱动开发（BDD） - 象帝浮华生">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2020-10-20T13:56:39&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2020-10-20T13:56:39&#43;08:00'>
+        
+    <meta name="Keywords" content="Java 敏捷搜索">
+    <meta name="description" content="cucumber 是 BDD 的一款很老牌的框架，使用 Ruby 进行开发，并对 Java 做了兼容">
+        
+    <meta name="author" content="象帝浮华生">
+    <meta property="og:url" content="https://www.ahianzhang.com/post/spring-boot-cucumber/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+    
+    
+    
+        <link rel="stylesheet" href='/css/douban.css'>
+    
+        <link rel="stylesheet" href='/css/other.css'>
+    
+</head>
+
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://www.ahianzhang.com">
+                        象帝浮华生
+                    </a>
+                
+                <p class="description">大道至简</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://www.ahianzhang.com">首页</a>
+                    
+                    <a  href="https://www.ahianzhang.com/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://www.ahianzhang.com/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    <style type="text/css">
+    .post-toc {
+        position: fixed;
+        width: 200px;
+        margin-left: -210px;
+        padding: 5px 10px;
+        font-family: Athelas, STHeiti, Microsoft Yahei, serif;
+        font-size: 12px;
+        border: 1px solid rgba(0, 0, 0, .07);
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.98);
+        background-clip: padding-box;
+        -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, .125);
+        box-shadow: 1px 1px 2px rgba(0, 0, 0, .125);
+        word-wrap: break-word;
+        white-space: nowrap;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        z-index: 999;
+        cursor: pointer;
+        max-height: 70%;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .post-toc .post-toc-title {
+        width: 100%;
+        margin: 0 auto;
+        font-size: 20px;
+        font-weight: 400;
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    .post-toc .post-toc-content {
+        font-size: 15px;
+    }
+
+    .post-toc .post-toc-content>nav>ul {
+        margin: 10px 0;
+    }
+
+    .post-toc .post-toc-content ul {
+        padding-left: 20px;
+        list-style: square;
+        margin: 0.5em;
+        line-height: 1.8em;
+    }
+
+    .post-toc .post-toc-content ul ul {
+        padding-left: 15px;
+        display: none;
+    }
+
+    @media print,
+    screen and (max-width:1057px) {
+        .post-toc {
+            display: none;
+        }
+    }
+</style>
+<div class="post-toc" style="position: absolute; top: 188px;">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#添加依赖">添加依赖</a></li>
+    <li><a href="#添加-feature-文件">添加 feature 文件</a></li>
+    <li><a href="#右键运行">右键运行</a></li>
+    <li><a href="#步骤定义">步骤定义</a></li>
+    <li><a href="#配置-junit-引导">配置 Junit 引导</a></li>
+    <li><a href="#再次运行">再次运行</a></li>
+    <li><a href="#查看测试报告">查看测试报告</a></li>
+    <li><a href="#jenkins-集成">Jenkins 集成</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#中英文关键字的对照表">中英文关键字的对照表</a></li>
+  </ul>
+</nav>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var postToc = $(".post-toc");
+        if (postToc.length) {
+            var leftPos = $("#main").offset().left;
+            if(leftPos<220){
+                postToc.css({"width":leftPos-10,"margin-left":(0-leftPos)})
+            }
+
+            var t = postToc.offset().top - 20,
+                a = {
+                    start: {
+                        position: "absolute",
+                        top: t
+                    },
+                    process: {
+                        position: "fixed",
+                        top: 20
+                    },
+                };
+            $(window).scroll(function () {
+                var e = $(window).scrollTop();
+                e < t ? postToc.css(a.start) : postToc.css(a.process)
+            })
+        }
+    })
+</script>
+    <article class="post">
+        <header>
+            <h1 class="post-title">使用 cucumber 进行行为驱动开发（BDD）</h1>
+        </header>
+        <date class="post-meta meta-date">
+            2020年10月20日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E6%80%BB%E7%BB%93'>总结</a></span>
+            
+        </div>
+        
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">|<span id="busuanzi_value_page_pv"></span><span>
+                    阅读</span></span>
+        </div>
+        
+        
+        <div class="post-content">
+            <h1 id="前言">前言</h1>
+<p>保证软件质量的方式多种多样，根据测试金字塔上所描绘的，单元测试是最有效的，但是在公司内部实践的时候却遇到了一些问题，比如赶进度来不及写单元测试、改了代码逻辑单元测试也需要跟着变、验收时同样会有很多 bug，总结下来大概有几个原因：</p>
+<ul>
+<li>需求分析时有很多细节没有考虑到（这个不可避免）</li>
+<li>测试用例覆盖的场景不全</li>
+<li>分层架构需要对每一层都进行测试，会占用大量时间</li>
+</ul>
+<p>还有一个原因是<strong>公司技术环境</strong>，我司是业务驱动的，主营业务在线下，最有价值是业务而非技术。</p>
+<p>综合多方面的原因，决定尝试 BDD 的测试方式，这样做的好处可以分为以下几点：</p>
+<ul>
+<li>活文档，好的用例能够体现业务的整个面貌</li>
+<li>将关注点放到更有价值的业务上来，而非技术</li>
+<li>对于目前团队现状，BDD 的投入产出比要比单元测试更好</li>
+</ul>
+<h1 id="步骤">步骤</h1>
+<p>以<strong>用户登录</strong>的用户故事举例：</p>
+<pre><code>作为一名供应商，我希望在输入用户名：”admin“，密码：“admin” 后能够进到系统首页，然后能够进行数据操作
+
+验收标准：
+ 场景1：用户名密码正确
+  Given：用户名：admin，密码：admin
+  When：我在登录页上输入用户名 admin 和密码 admin
+  Then：我将进入到系统首页
+  
+ 场景2：用户名或密码不正确
+ Given：用户名：admin，密码：admin
+ When：我在登录页上输入用户名 admin 和密码 admin123
+ Then：我被告知 “用户名或者密码错误”
+ AND：此时我还是未登录状态
+ 
+</code></pre><p>注意：对于用户故事验收标准这部分应该以用户行为为主，避免UI操作的字段出现，比如“我点击了提交按钮”，这样是不推荐的。</p>
+<h2 id="添加依赖">添加依赖</h2>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#000080">&lt;dependency&gt;</span>
+    <span style="color:#000080">&lt;groupId&gt;</span>io.cucumber<span style="color:#000080">&lt;/groupId&gt;</span>
+    <span style="color:#000080">&lt;artifactId&gt;</span>cucumber-java<span style="color:#000080">&lt;/artifactId&gt;</span>
+    <span style="color:#000080">&lt;version&gt;</span>${cucumber.version}<span style="color:#000080">&lt;/version&gt;</span>
+    <span style="color:#000080">&lt;scope&gt;</span>test<span style="color:#000080">&lt;/scope&gt;</span>
+<span style="color:#000080">&lt;/dependency&gt;</span>
+<span style="color:#000080">&lt;dependency&gt;</span>
+    <span style="color:#000080">&lt;groupId&gt;</span>io.cucumber<span style="color:#000080">&lt;/groupId&gt;</span>
+    <span style="color:#000080">&lt;artifactId&gt;</span>cucumber-junit<span style="color:#000080">&lt;/artifactId&gt;</span>
+    <span style="color:#000080">&lt;version&gt;</span>${cucumber.version}<span style="color:#000080">&lt;/version&gt;</span>
+    <span style="color:#000080">&lt;scope&gt;</span>test<span style="color:#000080">&lt;/scope&gt;</span>
+<span style="color:#000080">&lt;/dependency&gt;</span>
+<span style="color:#000080">&lt;dependency&gt;</span>
+    <span style="color:#000080">&lt;groupId&gt;</span>io.cucumber<span style="color:#000080">&lt;/groupId&gt;</span>
+    <span style="color:#000080">&lt;artifactId&gt;</span>cucumber-spring<span style="color:#000080">&lt;/artifactId&gt;</span>
+    <span style="color:#000080">&lt;version&gt;</span>${cucumber.version}<span style="color:#000080">&lt;/version&gt;</span>
+    <span style="color:#000080">&lt;scope&gt;</span>test<span style="color:#000080">&lt;/scope&gt;</span>
+<span style="color:#000080">&lt;/dependency&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="添加-feature-文件">添加 feature 文件</h2>
+<p>在 /src/test/resource 文件夹下新建 feature 文件夹，并在此文件夹中创建 login.feature 文件。</p>
+<p>添加一个场景</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a61717;background-color:#e3d2d2">#</span>language<span style="color:#000;font-weight:bold">:</span> zh<span style="color:#000;font-weight:bold">-</span>CN
+功能<span style="color:#a61717;background-color:#e3d2d2">：</span>供应商登录
+   场景大纲<span style="color:#000;font-weight:bold">:</span> 用户名密码正确
+     假设已注册的供应商用户名密码 admin admin
+     当供应商输入用户名密码<span style="color:#000;font-weight:bold">&lt;</span>username<span style="color:#000;font-weight:bold">&gt;&lt;</span>password<span style="color:#000;font-weight:bold">&gt;</span>
+     那么能够进入到系统首页
+     例子<span style="color:#000;font-weight:bold">:</span>
+     <span style="color:#000;font-weight:bold">|</span>username<span style="color:#000;font-weight:bold">|</span>password<span style="color:#000;font-weight:bold">|</span>
+     <span style="color:#000;font-weight:bold">|</span>admin   <span style="color:#000;font-weight:bold">|</span>admin   <span style="color:#000;font-weight:bold">|</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>说明：</p>
+<ul>
+<li>#language: zh-CN 指定使用的语言</li>
+<li>功能：对应 user story 的标题</li>
+<li>场景：对应功能的其中一种情况</li>
+<li>假设、当、那么：cucumber 指定的中文 DSL，对于 Given、When、Then</li>
+<li>对于要使用变量的地方使用 <code>&lt;</code> <code>&gt;</code> 标注出来并在下面的例子中列出数据内容</li>
+</ul>
+<p>注意：feature 中的标点符号<strong>全部为英文标点</strong></p>
+<h2 id="右键运行">右键运行</h2>
+<p>此时我们还未创建任何业务代码，但是还是会有高亮展示</p>
+<p>
+        <img class="mx-auto" alt="image-20201020175455431" src="https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2020-10-20-095457.png" />   
+    </p>
+<p>此时，我们右键点击会有下面的按钮</p>
+<p>
+        <img class="mx-auto" alt="image-20201020175654194" src="https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2020-10-20-095658.png" />   
+    </p>
+<p>点击运行</p>
+<p>
+        <img class="mx-auto" alt="image-20201020175752514" src="https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2020-10-20-095754.png" />   
+    </p>
+<p>因为我们还没有编写代码，所以此时测试一定会报错，那么接下来需要做的是写代码让这段测试通过</p>
+<h2 id="步骤定义">步骤定义</h2>
+<p>在  /src/test/java 下新建一个 login 的文件夹，并新建 <strong>LoginStepDef</strong> java 文件。我们的测试逻辑将在这个文件中完成。本次仅对密码正确的情况做演示</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#3c5d5d;font-weight:bold">@CucumberContextConfiguration</span>
+<span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">class</span> <span style="color:#458;font-weight:bold">LoginStepDef</span> <span style="color:#000;font-weight:bold">{</span>
+
+    <span style="color:#000;font-weight:bold">private</span>  Account account<span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#3c5d5d;font-weight:bold">@假设</span><span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;^已注册的供应商用户名密码 admin admin$&#34;</span><span style="color:#000;font-weight:bold">)</span>
+        <span style="color:#000;font-weight:bold">public</span> <span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">setUp</span><span style="color:#000;font-weight:bold">(){</span>
+            account <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">new</span> Account<span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;admin&#34;</span><span style="color:#000;font-weight:bold">,</span><span style="color:#d14">&#34;admin&#34;</span><span style="color:#000;font-weight:bold">);</span>
+        <span style="color:#000;font-weight:bold">}</span>
+
+        <span style="color:#3c5d5d;font-weight:bold">@当</span><span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;^供应商输入用户名密码(\\S*)(\\S*)$&#34;</span><span style="color:#000;font-weight:bold">)</span>
+        <span style="color:#000;font-weight:bold">public</span> <span style="color:#458;font-weight:bold">boolean</span> <span style="color:#900;font-weight:bold">when_input_account_info</span><span style="color:#000;font-weight:bold">(</span>String username<span style="color:#000;font-weight:bold">,</span>String password<span style="color:#000;font-weight:bold">){</span>
+            <span style="color:#000;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span>account<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">valid</span><span style="color:#000;font-weight:bold">(</span>username<span style="color:#000;font-weight:bold">,</span>password<span style="color:#000;font-weight:bold">)){</span>
+                <span style="color:#000;font-weight:bold">return</span> <span style="color:#000;font-weight:bold">true</span><span style="color:#000;font-weight:bold">;</span>
+            <span style="color:#000;font-weight:bold">}</span>
+            <span style="color:#000;font-weight:bold">return</span> <span style="color:#000;font-weight:bold">false</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#000;font-weight:bold">}</span>
+       <span style="color:#3c5d5d;font-weight:bold">@那么</span><span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;^能够进入到系统首页$&#34;</span><span style="color:#000;font-weight:bold">)</span>
+        <span style="color:#000;font-weight:bold">public</span> <span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">get_into_index</span><span style="color:#000;font-weight:bold">(){</span>
+
+       <span style="color:#000;font-weight:bold">}</span>
+
+    <span style="color:#000;font-weight:bold">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>说明：</p>
+<ol>
+<li>
+<p><code>@CucumberContextConfiguration</code> cucumber 提供的 Spring 集成注解</p>
+</li>
+<li>
+<p><code>@假设(&quot;^已注册的供应商用户名密码 admin admin$&quot;)</code>@假设是中文的注解（中英文对照表请参见文末表格），与 feature 文件相对应。<code>^</code> <code> $</code>  和 shell 功能类似，代表一行的开头和结尾，固定格式。</p>
+</li>
+<li>
+<p>对于需要传递参数的方法需要使用正则表达式进行占位</p>
+</li>
+</ol>
+<ul>
+<li>
+<p>整型  (\d+)</p>
+</li>
+<li>
+<p>字符串 (\S*)</p>
+</li>
+<li>
+<p>布尔值 (true|false)</p>
+</li>
+<li>
+<p>列表 使用 DataTable 举例：</p>
+<blockquote>
+<p>Given the following animals:
+| cow   |
+| horse |
+| sheep |</p>
+<p>定义时：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"> <span style="color:#3c5d5d;font-weight:bold">@Given</span><span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;the following animals:&#34;</span><span style="color:#000;font-weight:bold">)</span>
+  <span style="color:#000;font-weight:bold">public</span> <span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">the_following_animals</span><span style="color:#000;font-weight:bold">(</span>List<span style="color:#000;font-weight:bold">&lt;</span>String<span style="color:#000;font-weight:bold">&gt;</span> animals<span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+  <span style="color:#000;font-weight:bold">}</span>
+</code></pre></td></tr></table>
+</div>
+</div></blockquote>
+</li>
+</ul>
+<h2 id="配置-junit-引导">配置 Junit 引导</h2>
+<p>在 /src/test/java/login 中创建名为 LoginIntegerationTest 的 java 文件</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#3c5d5d;font-weight:bold">@RunWith</span><span style="color:#000;font-weight:bold">(</span>Cucumber<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">class</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#3c5d5d;font-weight:bold">@CucumberOptions</span><span style="color:#000;font-weight:bold">(</span>features <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;classpath:features/login&#34;</span><span style="color:#000;font-weight:bold">,</span>
+        plugin <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">{</span><span style="color:#d14">&#34;pretty&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#d14">&#34;html:target/cucumber/login.html&#34;</span><span style="color:#000;font-weight:bold">})</span>
+<span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">class</span> <span style="color:#458;font-weight:bold">LoginIntegrationTest</span> <span style="color:#000;font-weight:bold">{</span>
+<span style="color:#000;font-weight:bold">}</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>说明：</p>
+<ol>
+<li><code>@CucumberOptions</code>  cucumber 的配置注解</li>
+<li><code>features</code> 指定 feature 文件的路径</li>
+<li><code>plugin</code> 将测试结果以 html 的格式输出到指定目录</li>
+</ol>
+<h2 id="再次运行">再次运行</h2>
+<p>
+        <img class="mx-auto" alt="image-20201021115138478" src="https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2020-10-21-035140.png" />   
+    </p>
+<h2 id="查看测试报告">查看测试报告</h2>
+<p>根据配置的目录，找到对应的 html 文件</p>
+<p>
+        <img class="mx-auto" alt="image-20201021115248832" src="https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2020-10-21-035250.png" />   
+    </p>
+<h2 id="jenkins-集成">Jenkins 集成</h2>
+<p>Github 中有开源的 Jenkins Plugin： <a href="https://github.com/jenkinsci/cucumber-reports-plugin">Publish pretty cucumber-jvm reports on Jenkins</a></p>
+<h1 id="总结">总结</h1>
+<p>如何选择合适的测试手段，需要结合企业研发团队的现状和经营模式做选型，TDD 虽然能提升质量，但并不适用所有的企业。</p>
+<p>本文对 cucumber 做了一个基础的演示，对于复杂的环境，推荐结合 <a href="https://rest-assured.io/">Rest Assured</a> 对 API 做测试。</p>
+<p>想要了解更多可以查看文末参考资料。</p>
+<h1 id="附表">附表</h1>
+<h2 id="中英文关键字的对照表">中英文关键字的对照表</h2>
+<table>
+<thead>
+<tr>
+<th>英文关键字</th>
+<th>中文关键字</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>feature</td>
+<td>&ldquo;功能&rdquo;</td>
+</tr>
+<tr>
+<td>background</td>
+<td>&ldquo;背景&rdquo;</td>
+</tr>
+<tr>
+<td>scenario</td>
+<td>&ldquo;场景&rdquo;, &ldquo;剧本&rdquo;</td>
+</tr>
+<tr>
+<td>scenario_outline</td>
+<td>&ldquo;场景大纲&rdquo;, &ldquo;剧本大纲&rdquo;</td>
+</tr>
+<tr>
+<td>examples</td>
+<td>&ldquo;例子&rdquo;</td>
+</tr>
+<tr>
+<td>given</td>
+<td>&ldquo;* &ldquo;, &ldquo;假如&rdquo;, &ldquo;假设&rdquo;, &ldquo;假定&rdquo;</td>
+</tr>
+<tr>
+<td>when</td>
+<td>&ldquo;* &ldquo;, &ldquo;当&rdquo;</td>
+</tr>
+<tr>
+<td>then</td>
+<td>&ldquo;* &ldquo;, &ldquo;那么&rdquo;</td>
+</tr>
+<tr>
+<td>and</td>
+<td>&ldquo;* &ldquo;, &ldquo;而且&rdquo;, &ldquo;并且&rdquo;, &ldquo;同时&rdquo;</td>
+</tr>
+<tr>
+<td>but</td>
+<td>&ldquo;* &ldquo;, &ldquo;但是&rdquo;</td>
+</tr>
+<tr>
+<td>given (code)</td>
+<td>&ldquo;假如&rdquo;, &ldquo;假设&rdquo;, &ldquo;假定&rdquo;</td>
+</tr>
+<tr>
+<td>when (code)</td>
+<td>&ldquo;当&rdquo;</td>
+</tr>
+<tr>
+<td>then (code)</td>
+<td>&ldquo;那么&rdquo;</td>
+</tr>
+<tr>
+<td>and (code)</td>
+<td>&ldquo;而且&rdquo;, &ldquo;并且&rdquo;, &ldquo;同时&rdquo;</td>
+</tr>
+<tr>
+<td>but (code)</td>
+<td>&ldquo;但是&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<h1 id="参考资料">参考资料</h1>
+<p><a href="https://vitzhou.gitbooks.io/java-test-learning/content/cucumber/practice/chinese.html">https://vitzhou.gitbooks.io/java-test-learning/content/cucumber/practice/chinese.html</a></p>
+<p><a href="https://vitzhou.gitbooks.io/java-test-learning/content/cucumber/practice/pass_parameters.html">https://vitzhou.gitbooks.io/java-test-learning/content/cucumber/practice/pass_parameters.html</a></p>
+<p><a href="https://developer.ibm.com/zh/articles/j-lo-cucumber01/">https://developer.ibm.com/zh/articles/j-lo-cucumber01/</a></p>
+<p><a href="https://thepracticaldeveloper.com/cucumber-tests-spring-boot-dependency-injection/">https://thepracticaldeveloper.com/cucumber-tests-spring-boot-dependency-injection/</a></p>
+<h1 id="相关书籍">相关书籍</h1>
+<p><a href="https://book.douban.com/subject/24843412/">Cucumber：行为驱动开发指南</a></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://www.ahianzhang.com">象帝浮华生</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://www.ahianzhang.com/post/spring-boot-cucumber/">https://www.ahianzhang.com/post/spring-boot-cucumber/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/spring-cloud-intergration/">微服务应用集成 SpringCloud 步骤</a></li>
+        
+        <li><a href="/post/change-data-capture/">电商搜索数据同步方案</a></li>
+        
+        <li><a href="/post/summary14/">通过一道数值转换题重温计算机补码</a></li>
+        
+        <li><a href="/post/macos-tools/">macOS 系统推荐的一些软件</a></li>
+        
+        <li><a href="/post/devops-01/">DevOps 实施规划（持续更新）</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Cucumber'>Cucumber</a></li>
+                
+                <li><a href='/tags/BDD'>BDD</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "AhianZhang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+    
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2021 <a href="https://www.ahianzhang.com">象帝浮华生 By 象帝浮华生</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://www.flysnow.org/" target="_black"><span class="badge-subject">Design by</span><span class="badge-value bg-brightgreen">飞雪无情</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+    <script src='/js/douban.js'></script>
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://www.ahianzhang.com/search/' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://www.ahianzhang.com">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/spring-boot-cucumber/" title="使用 cucumber 进行行为驱动开发（BDD）">使用 cucumber 进行行为驱动开发（BDD）</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/spring-cloud-intergration/" title="微服务应用集成 SpringCloud 步骤">微服务应用集成 SpringCloud 步骤</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/change-data-capture/" title="电商搜索数据同步方案">电商搜索数据同步方案</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/summary14/" title="通过一道数值转换题重温计算机补码">通过一道数值转换题重温计算机补码</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/macos-tools/" title="macOS 系统推荐的一些软件">macOS 系统推荐的一些软件</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/devops-01/" title="DevOps 实施规划（持续更新）">DevOps 实施规划（持续更新）</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/rabbitmq-reliability/" title="rabbitmq 如何提高可靠性并保证消费端幂等">rabbitmq 如何提高可靠性并保证消费端幂等</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/rabbit-mq-basic-concept/" title="AMQ Model总结">AMQ Model总结</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/pair-programming/" title="结对编程">结对编程</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/rsocket-intro/" title="RSocket 介绍">RSocket 介绍</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://www.ahianzhang.com/categories/DDD/">DDD (1)</a></li>
+    
+    <li><a href="https://www.ahianzhang.com/categories/DevOps/">DevOps (1)</a></li>
+    
+    <li><a href="https://www.ahianzhang.com/categories/TDD/">TDD (1)</a></li>
+    
+    <li><a href="https://www.ahianzhang.com/categories/XP/">XP (1)</a></li>
+    
+    <li><a href="https://www.ahianzhang.com/categories/%E5%8D%8F%E8%AE%AE/">协议 (2)</a></li>
+    
+    <li><a href="https://www.ahianzhang.com/categories/%E6%80%BB%E7%BB%93/">总结 (17)</a></li>
+    
+    <li><a href="https://www.ahianzhang.com/categories/%E6%90%9C%E7%B4%A2/">搜索 (6)</a></li>
+    
+    <li><a href="https://www.ahianzhang.com/categories/%E6%9E%B6%E6%9E%84/">架构 (16)</a></li>
+    
+    <li><a href="https://www.ahianzhang.com/categories/%E7%AE%97%E6%B3%95/">算法 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://www.ahianzhang.com/tags/BDD/">BDD</a>
+    
+    <a href="https://www.ahianzhang.com/tags/Cucumber/">Cucumber</a>
+    
+    <a href="https://www.ahianzhang.com/tags/ElasticSearch/">ElasticSearch</a>
+    
+    <a href="https://www.ahianzhang.com/tags/LeetCode/">LeetCode</a>
+    
+    <a href="https://www.ahianzhang.com/tags/SpringCloud/">SpringCloud</a>
+    
+    <a href="https://www.ahianzhang.com/tags/devops/">devops</a>
+    
+    <a href="https://www.ahianzhang.com/tags/macOS/">macOS</a>
+    
+    <a href="https://www.ahianzhang.com/tags/nat/">nat</a>
+    
+    <a href="https://www.ahianzhang.com/tags/os/">os</a>
+    
+    <a href="https://www.ahianzhang.com/tags/rabbitmq/">rabbitmq</a>
+    
+    <a href="https://www.ahianzhang.com/tags/rsocket/">rsocket</a>
+    
+    <a href="https://www.ahianzhang.com/tags/tor/">tor</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E5%88%9B%E4%B8%9A/">创业</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/">工作总结</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E5%B9%B3%E5%8F%B0%E6%9E%B6%E6%9E%84/">平台架构</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/">年终总结</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/">性能调优</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%95%88%E7%8E%87/">效率</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%96%B9%E6%A1%88/">方案</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%9E%81%E9%99%90%E7%BC%96%E7%A8%8B/">极限编程</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/">概率论</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%A6%82%E8%BF%B0/">概述</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/">测试工具</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E7%90%86%E8%AE%BA/">理论</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E7%94%9F%E6%B4%BB%E6%80%BB%E7%BB%93/">生活总结</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E7%AE%97%E6%B3%95/">算法</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E8%A1%A5%E7%A0%81/">补码</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E8%AE%A1%E5%88%92/">计划</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">面向对象</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/">项目总结</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://taohuawu.club" title="潘少的 BLOG">潘少的 BLOG</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.hankcs.com/" title="hankcs">hankcs</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://www.ahianzhang.com/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

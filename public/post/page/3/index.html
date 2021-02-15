@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>Posts | 象帝浮华生</title>
+    <meta property="og:title" content="Posts - 象帝浮华生">
+    <meta property="og:type" content="article">
+        
+        
+    <meta name="Keywords" content="Java 敏捷搜索">
+    <meta name="description" content="Posts">
+        
+    <meta name="author" content="象帝浮华生">
+    <meta property="og:url" content="https://www.ahianzhang.com/post/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <link rel="alternate" type="application/rss+xml+xml" href="https://www.ahianzhang.com/post/index.xml" title="象帝浮华生" />
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+    
+    
+    
+        <link rel="stylesheet" href='/css/douban.css'>
+    
+        <link rel="stylesheet" href='/css/other.css'>
+    
+</head>
+
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://www.ahianzhang.com">
+                        象帝浮华生
+                    </a>
+                
+                <p class="description">大道至简</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://www.ahianzhang.com">首页</a>
+                    
+                    <a  href="https://www.ahianzhang.com/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://www.ahianzhang.com/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/summary10/" title="阶段性总结">阶段性总结</a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2019年6月18日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E6%80%BB%E7%BB%93'>总结</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            博客断断续续的在更着，总是想写总是找不到合适的时间。 做了那些事情 搜索 用 solr 将公司的搜索系统重构了一遍，但是感觉很有成就感，但现在看来真的很 low ，当然好的架构是简单高效的，但是对于搜索用 job 的方式去同步真的很 low ，而且性能很差。搜索是商品展示的关键，为什么要用 job 的方式去同步，这是领导决定的……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/summary10/">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/os1/" title="操作系统作用">操作系统作用</a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2019年6月1日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E6%9E%B6%E6%9E%84'>架构</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            操作系统作用 1、资源管理者 都能管理什么？ 自底向上 对于操作系统内部来讲 硬件资源 像 CPU 、内存、设备（输入输出设备、磁盘、时钟、网卡） 软件资源 磁盘上的文件，各类管理信息 如何管理 跟踪记录资源的使用情况 确定资源的分配策略 实施资源的分配与回收 提高资源利用率 保护资源的使用 协调多个进程对资源的请求……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/os1/">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/leetcode206/" title=""></a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2019年5月30日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E7%AE%97%E6%B3%95'>算法</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            Consideration make three pointers , pre,current,next; initial pre as null use tmp to save current&rsquo;s next node info change current&rsquo;s next to link pre node(first is null) move pre pointer to next node move current pointer to next node soultion 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 /** * Definition for singly-linked list. * public class ListNode { * int val; * ListNode next; * ListNode(int x) { val = x; } * } */ class Solution { public ListNode reverseList(ListNode head) { ListNode pre = null; ListNode current = head; while (current != null){ ListNode next = current.next; current.next = pre; pre = current; current = next; } return pre; } }……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/leetcode206/">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/leetcode461/" title="hamming-distance">hamming-distance</a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2019年5月28日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E7%AE%97%E6%B3%95'>算法</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            The Hamming distance between two integers is the number of positions at which the corresponding bits are different. Given two integers x and y, calculate the Hamming distance. Note: 0 ≤ x, y &lt; 231. Example: Input: x = 1, y = 4 Output: 2 Explanation: 1 (0 0 0 1) 4 (0 1 0 0) ↑ ↑ The above arrows point to positions where the corresponding bits are different. Consideration This problem is also have a relationship with &lsquo;^&rsquo; , Think about it : 1(0001) and 4(0100) their Xor is 5(0101) . next we use &amp; Operator to calculate the number of 1 , let the binary &amp; 1 ,if result is 1 ,sum&rsquo;s up , use &raquo; to move the postion. 5(0101) 0&amp;1 = 0 pass 01&amp;01 = 1 sum 010&amp;001 = 0 pass 0101&amp;0001 = 1 sum……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/leetcode461/">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/elasticsearch03/" title="ElasticSearch API 基本操作">ElasticSearch API 基本操作</a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2019年5月27日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E6%90%9C%E7%B4%A2'>搜索</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            查看集群健康值 GET _cat/health?v 查看 node 信息 GET _nodes 查看索引信息 GET _cat/indices?v 创建索引 PUT /test?pretty 删除索引 DELETE /test?pretty 新建文档并建立索引 创建一个index为 ecommerce 的索引 PUT /ecommerce/_doc/1 { &quot;product_id&quot;:1234, &quot;product_name&quot;: &quot;南极人&quot;, &quot;price&quot;:99.9, &quot;color&quot;:&quot;Red&quot;, &quot;tags&quot;:[&quot;轻松&quot;,&quot;舒服&quot;] } PUT /ecommerce/_doc/2 { &quot;product_id&quot;:5678, &quot;product_name&quot;: &quo……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/elasticsearch03/">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/elasticsearch02/" title="elasticsearch 集群容错">elasticsearch 集群容错</a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2019年5月24日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E6%90%9C%E7%B4%A2'>搜索</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            Q:有三台服务器，三个 Primary Shard怎么配置能使 ElasticSearch 达到高可用 在此之前应该先清楚 shard 、primary shard 、replica shard、node 的概念 还有 primary shard 在确定好个数后后期是无法更改的，能扩容的只有 replica shard。 三个 Primary Shard 的意思就是： 3 primary + 3 replica = 6 shard (默认情况下) 此时服务器的 node 分配如下： 一……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/elasticsearch02/">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/elastic-search/" title="ElasticSearch 基础概念">ElasticSearch 基础概念</a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2019年5月23日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E6%90%9C%E7%B4%A2'>搜索</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            documnet 文档，类似于 Java 的实体类，但非面向对象的，比实体类更加灵活。 index 索引，用来存放文档，一个索引可存放若干个 document type ElastcSearch 7 以后过时，使用 _doc 代替，预计在未来会移除 node 单个服务器，其实就是一个 ES 实例，多个 node 组成一个集群，node 能够进行索引和查询操作。默认每个 node 启动时会分配一个 UUID 作为标识。 shard 分片，……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/elastic-search/">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/technology-choice/" title="技术选型怎么做">技术选型怎么做</a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2019年5月23日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E6%9E%B6%E6%9E%84'>架构</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            技术选型包括哪些 从个人观点出发，技术选型包括框架、工具、语言。 需要考虑的点 公司规模 团队技术水平 时间和成本 生态 风险 公司规模 小公司 对于初创公司或者小公司来讲，上级领导的意愿更多的是能够快速盈利，此时应该选择成熟便捷的框架， 尽量减少学习成本，这就属于经验优先，因为只有做出成品并且盈利，……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/technology-choice/">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/math01/" title="条件概率、全概率与贝叶斯公式">条件概率、全概率与贝叶斯公式</a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2019年5月18日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E7%AE%97%E6%B3%95'>算法</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            条件概率公式 设事件A 发生的概率为 P(A), 事件B 发生的概率为 P(B),则在事件B发生的情况下事件A发生的概率（A given B 的概率）为： $$ P(A|B)=\frac{P(AB)}{P(B)} $$ 全概率公式 如果直接求事件A 的概率比较困难的时候，可以将事件A发生的概率分成一个个小的事件B的概率 $$ P(A)=\sum \limits_n{P(B_{n})P(A|B_{n})} $$ 贝叶斯公式 $$ P(B_{n}|A)=\frac{P(A|B_{n})P(B_{n})}{\sum \limits_n P(A|B_{n})P(B_{n})} $$……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/math01/">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/summary09/" title="年终总结">年终总结</a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2018年12月31日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E6%80%BB%E7%BB%93'>总结</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            很久没有写博客了，上一篇大概是在月初，这次算是对过去进行总结，准备迎接新的一年。 我不是很会写博客，纯粹是附庸风雅。 2018年 今年是从学校走向工作岗位的第一年，也是第一个年终总结。 学校 感谢张健全老师，今年年初带我去一个初创公司做官网，现在看自己的代码很 LOW ，但当时已经算班上很 NB 的了，……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/summary09/">阅读全文</a></p>
+    </article>
+    
+    
+    
+
+
+
+<ol class="page-navigator">
+    
+    <li class="prev">
+        <a href="https://www.ahianzhang.com/post/page/2/">上一页</a>
+    </li>
+    
+
+    
+    <li >
+        <a href="https://www.ahianzhang.com/post/">1</a>
+    </li>
+    
+    <li >
+        <a href="https://www.ahianzhang.com/post/page/2/">2</a>
+    </li>
+    
+    <li  class="current">
+        <a href="https://www.ahianzhang.com/post/page/3/">3</a>
+    </li>
+    
+    <li >
+        <a href="https://www.ahianzhang.com/post/page/4/">4</a>
+    </li>
+    
+    <li >
+        <a href="https://www.ahianzhang.com/post/page/5/">5</a>
+    </li>
+    
+    <li >
+        <a href="https://www.ahianzhang.com/post/page/6/">6</a>
+    </li>
+    
+
+    
+    <li class="next">
+        <a href="https://www.ahianzhang.com/post/page/4/">下一页</a>
+    </li>
+    
+</ol>
+
+
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2021 <a href="https://www.ahianzhang.com">象帝浮华生 By 象帝浮华生</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://www.flysnow.org/" target="_black"><span class="badge-subject">Design by</span><span class="badge-value bg-brightgreen">飞雪无情</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+    <script src='/js/douban.js'></script>
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://www.ahianzhang.com/search/' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://www.ahianzhang.com">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/spring-boot-cucumber/" title="使用 cucumber 进行行为驱动开发（BDD）">使用 cucumber 进行行为驱动开发（BDD）</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/spring-cloud-intergration/" title="微服务应用集成 SpringCloud 步骤">微服务应用集成 SpringCloud 步骤</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/change-data-capture/" title="电商搜索数据同步方案">电商搜索数据同步方案</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/summary14/" title="通过一道数值转换题重温计算机补码">通过一道数值转换题重温计算机补码</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/macos-tools/" title="macOS 系统推荐的一些软件">macOS 系统推荐的一些软件</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/devops-01/" title="DevOps 实施规划（持续更新）">DevOps 实施规划（持续更新）</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/rabbitmq-reliability/" title="rabbitmq 如何提高可靠性并保证消费端幂等">rabbitmq 如何提高可靠性并保证消费端幂等</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/rabbit-mq-basic-concept/" title="AMQ Model总结">AMQ Model总结</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/pair-programming/" title="结对编程">结对编程</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/rsocket-intro/" title="RSocket 介绍">RSocket 介绍</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://www.ahianzhang.com/categories/DDD/">DDD (1)</a></li>
+    
+    <li><a href="https://www.ahianzhang.com/categories/DevOps/">DevOps (1)</a></li>
+    
+    <li><a href="https://www.ahianzhang.com/categories/TDD/">TDD (1)</a></li>
+    
+    <li><a href="https://www.ahianzhang.com/categories/XP/">XP (1)</a></li>
+    
+    <li><a href="https://www.ahianzhang.com/categories/%E5%8D%8F%E8%AE%AE/">协议 (2)</a></li>
+    
+    <li><a href="https://www.ahianzhang.com/categories/%E6%80%BB%E7%BB%93/">总结 (17)</a></li>
+    
+    <li><a href="https://www.ahianzhang.com/categories/%E6%90%9C%E7%B4%A2/">搜索 (6)</a></li>
+    
+    <li><a href="https://www.ahianzhang.com/categories/%E6%9E%B6%E6%9E%84/">架构 (16)</a></li>
+    
+    <li><a href="https://www.ahianzhang.com/categories/%E7%AE%97%E6%B3%95/">算法 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://www.ahianzhang.com/tags/BDD/">BDD</a>
+    
+    <a href="https://www.ahianzhang.com/tags/Cucumber/">Cucumber</a>
+    
+    <a href="https://www.ahianzhang.com/tags/ElasticSearch/">ElasticSearch</a>
+    
+    <a href="https://www.ahianzhang.com/tags/LeetCode/">LeetCode</a>
+    
+    <a href="https://www.ahianzhang.com/tags/SpringCloud/">SpringCloud</a>
+    
+    <a href="https://www.ahianzhang.com/tags/devops/">devops</a>
+    
+    <a href="https://www.ahianzhang.com/tags/macOS/">macOS</a>
+    
+    <a href="https://www.ahianzhang.com/tags/nat/">nat</a>
+    
+    <a href="https://www.ahianzhang.com/tags/os/">os</a>
+    
+    <a href="https://www.ahianzhang.com/tags/rabbitmq/">rabbitmq</a>
+    
+    <a href="https://www.ahianzhang.com/tags/rsocket/">rsocket</a>
+    
+    <a href="https://www.ahianzhang.com/tags/tor/">tor</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E5%88%9B%E4%B8%9A/">创业</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/">工作总结</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E5%B9%B3%E5%8F%B0%E6%9E%B6%E6%9E%84/">平台架构</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/">年终总结</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/">性能调优</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%95%88%E7%8E%87/">效率</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%96%B9%E6%A1%88/">方案</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%9E%81%E9%99%90%E7%BC%96%E7%A8%8B/">极限编程</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/">概率论</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%A6%82%E8%BF%B0/">概述</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/">测试工具</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E7%90%86%E8%AE%BA/">理论</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E7%94%9F%E6%B4%BB%E6%80%BB%E7%BB%93/">生活总结</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E7%AE%97%E6%B3%95/">算法</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E8%A1%A5%E7%A0%81/">补码</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E8%AE%A1%E5%88%92/">计划</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">面向对象</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/">项目总结</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://taohuawu.club" title="潘少的 BLOG">潘少的 BLOG</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.hankcs.com/" title="hankcs">hankcs</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://www.ahianzhang.com/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

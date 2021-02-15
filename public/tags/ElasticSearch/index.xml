@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ElasticSearch on 象帝浮华生</title>
+    <link>https://www.ahianzhang.com/tags/ElasticSearch/</link>
+    <description>Recent content in ElasticSearch on 象帝浮华生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 27 May 2019 17:52:23 +0000</lastBuildDate><atom:link href="https://www.ahianzhang.com/tags/ElasticSearch/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ElasticSearch API 基本操作</title>
+      <link>https://www.ahianzhang.com/post/elasticsearch03/</link>
+      <pubDate>Mon, 27 May 2019 17:52:23 +0000</pubDate>
+      
+      <guid>https://www.ahianzhang.com/post/elasticsearch03/</guid>
+      <description>查看集群健康值 GET _cat/health?v 查看 node 信息 GET _nodes 查看索引信息 GET _cat/indices?v 创建索引 PUT /test?pretty 删除索引 DELETE /test?pretty 新建文档并建立索引 创建一个index为 ecommerce 的索引 PUT /ecommerce/_doc/1 { &amp;quot;product_id&amp;quot;:1234, &amp;quot;product_name&amp;quot;: &amp;quot;南极人&amp;quot;, &amp;quot;price&amp;quot;:99.9, &amp;quot;color&amp;quot;:&amp;quot;Red&amp;quot;, &amp;quot;tags&amp;quot;:[&amp;quot;轻松&amp;quot;,&amp;quot;舒服&amp;quot;] } PUT /ecommerce/_doc/2 { &amp;quot;product_id&amp;quot;:5678, &amp;quot;product_name&amp;quot;: &amp;quo</description>
+    </item>
+    
+    <item>
+      <title>elasticsearch 集群容错</title>
+      <link>https://www.ahianzhang.com/post/elasticsearch02/</link>
+      <pubDate>Fri, 24 May 2019 16:15:45 +0000</pubDate>
+      
+      <guid>https://www.ahianzhang.com/post/elasticsearch02/</guid>
+      <description>Q:有三台服务器，三个 Primary Shard怎么配置能使 ElasticSearch 达到高可用 在此之前应该先清楚 shard 、primary shard 、replica shard、node 的概念 还有 primary shard 在确定好个数后后期是无法更改的，能扩容的只有 replica shard。 三个 Primary Shard 的意思就是： 3 primary + 3 replica = 6 shard (默认情况下) 此时服务器的 node 分配如下： 一</description>
+    </item>
+    
+    <item>
+      <title>ElasticSearch 基础概念</title>
+      <link>https://www.ahianzhang.com/post/elastic-search/</link>
+      <pubDate>Thu, 23 May 2019 17:08:16 +0000</pubDate>
+      
+      <guid>https://www.ahianzhang.com/post/elastic-search/</guid>
+      <description>documnet 文档，类似于 Java 的实体类，但非面向对象的，比实体类更加灵活。 index 索引，用来存放文档，一个索引可存放若干个 document type ElastcSearch 7 以后过时，使用 _doc 代替，预计在未来会移除 node 单个服务器，其实就是一个 ES 实例，多个 node 组成一个集群，node 能够进行索引和查询操作。默认每个 node 启动时会分配一个 UUID 作为标识。 shard 分片，</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>nat on 象帝浮华生</title>
+    <link>https://www.ahianzhang.com/tags/nat/</link>
+    <description>Recent content in nat on 象帝浮华生</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 09 May 2018 20:25:53 +0000</lastBuildDate><atom:link href="https://www.ahianzhang.com/tags/nat/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VMware 12 NAT网络下配置 ubuntu 16.04 LTS 系统静态 IP</title>
+      <link>https://www.ahianzhang.com/post/ubuntu-nat-static-ip-config/</link>
+      <pubDate>Wed, 09 May 2018 20:25:53 +0000</pubDate>
+      
+      <guid>https://www.ahianzhang.com/post/ubuntu-nat-static-ip-config/</guid>
+      <description>镜像是 ubuntu 16.04 server 版，主机是 Windows10 系统，因为要搭建 Hadoop 集群，所以配置一下，将此配置流程在此记录，方便查找。 查看主机 IP ipconfig 系统分配给虚拟机使用的网卡是 VMnet8，其内容如下： 如果有这块网卡则说明出于开启状态 查看 VMware 的虚拟网络选项 子网 ip 最后以 0 结尾，这个术语叫什么不知道，网关 ip 以 2 结尾 例如： 子网 ip</description>
+    </item>
+    
+  </channel>
+</rss>
