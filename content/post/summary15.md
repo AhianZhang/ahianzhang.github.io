@@ -1,7 +1,6 @@
 ---
 title: "年终总结"
 date: 2021-02-17T08:57:23+08:00
-draft: true
 tags: ["年终总结"]
 categories: ["总结"]
 ---
