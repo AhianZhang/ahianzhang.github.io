@@ -13,11 +13,7 @@ categories: ["DevOps","总结"]
 
 ## 下载
 
-
-
-### 使用 npm 进行下载并运行
-
-
+#### 使用 npm 进行下载并运行
 
 ```bash
 mkidr automation-test
@@ -28,13 +24,15 @@ npm install cypress --save-dev
 ./node_modules/.bin/cypress open
 ```
 
+
+
 ### 使用 vscode 进行脚本编写
 
 使用 vscode 打开刚才创建的 `automation-test` 文件夹，然后在 integration 文件夹下新建文件夹名称为 `coupon-ui` 并在此文件夹下新建 demo.spec.js 文件。
 
+
+
 ### 基本语法
-
-
 
 ```
 describe('场景',function(){
