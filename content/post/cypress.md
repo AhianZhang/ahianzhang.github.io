@@ -3,7 +3,10 @@ title: "Cypress 实践总结"
 date: 2021-07-08T09:52:31+08:00
 tags: ["cypress"]
 categories: ["DevOps","总结"]
+toc: false
 ---
+
+
 
 # 前言
 
@@ -11,9 +14,9 @@ categories: ["DevOps","总结"]
 
 
 
-## 下载
+### 下载
 
-#### 使用 npm 进行下载并运行
+使用 npm 进行下载并运行
 
 ```bash
 mkidr automation-test
@@ -26,7 +29,7 @@ npm install cypress --save-dev
 
 
 
-### 使用 vscode 进行脚本编写
+## 脚本编写
 
 使用 vscode 打开刚才创建的 `automation-test` 文件夹，然后在 integration 文件夹下新建文件夹名称为 `coupon-ui` 并在此文件夹下新建 demo.spec.js 文件。
 
