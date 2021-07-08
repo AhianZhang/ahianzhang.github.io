@@ -9,9 +9,15 @@ categories: ["DevOps","总结"]
 
 最近接手了一个前端的项目，这个项目使用宜搭低代码平台进行搭建，由于每次修改代码或者调整组件时都有可能造成其他问题，影响整体的项目质量，然而又不想每次都进行手动的“点点点”操作，于是就打算研究一下如今流行的前端自动化框架 cypress。
 
+
+
 ## 下载
 
+
+
 ### 使用 npm 进行下载并运行
+
+
 
 ```bash
 mkidr automation-test
@@ -27,6 +33,8 @@ npm install cypress --save-dev
 使用 vscode 打开刚才创建的 `automation-test` 文件夹，然后在 integration 文件夹下新建文件夹名称为 `coupon-ui` 并在此文件夹下新建 demo.spec.js 文件。
 
 ### 基本语法
+
+
 
 ```
 describe('场景',function(){
