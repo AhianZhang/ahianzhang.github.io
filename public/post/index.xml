@@ -6,7 +6,25 @@
     <description>Recent content in Posts on 象帝浮华生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 20 Oct 2020 13:56:39 +0000</lastBuildDate><atom:link href="https://www.ahianzhang.com/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 08 Jul 2021 09:52:31 +0800</lastBuildDate><atom:link href="https://www.ahianzhang.com/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cypress 实践总结</title>
+      <link>https://www.ahianzhang.com/post/cypress/</link>
+      <pubDate>Thu, 08 Jul 2021 09:52:31 +0800</pubDate>
+      
+      <guid>https://www.ahianzhang.com/post/cypress/</guid>
+      <description>前言 最近接手了一个前端的项目，这个项目使用宜搭低代码平台进行搭建，由于每次修改代码或者调整组件时都有可能造成其他问题，影响整体的项目质量，然而又不想每次都进行手动的“点点点”操作，于是就打算研究一下如今流行的前端自动化框架 cypress。 下载 使用 npm 进行下载并运行 1 2 3 4 5 6 mkidr automation-test cd</description>
+    </item>
+    
+    <item>
+      <title>年终总结</title>
+      <link>https://www.ahianzhang.com/post/summary15/</link>
+      <pubDate>Wed, 17 Feb 2021 08:57:23 +0800</pubDate>
+      
+      <guid>https://www.ahianzhang.com/post/summary15/</guid>
+      <description>2020 年注定是不平凡的一年，在新冠疫情的影响下，居家隔离、办公、最低工资等等，企业即要保护打工人的安全又要保障公司的生存，可谓是手段频出。 今年是以自我提升为主。学习了极客时间的设计模式专栏，对设计模式有了新的认知，行为型、结构型、创建型各自的用途，以及为什么要使用设计模式，最后在实际</description>
+    </item>
+    
     <item>
       <title>使用 cucumber 进行行为驱动开发（BDD）</title>
       <link>https://www.ahianzhang.com/post/spring-boot-cucumber/</link>
