@@ -31,15 +31,15 @@ categories: ["总结"]
 
 买了份特色的杭州熏鱼
 
-<img src="/Users/ahianzhang/Pictures/Photos Library.photoslibrary/resources/derivatives/2/206E8EA5-E533-4FF9-A5C7-59D44410AB69_1_105_c.jpeg" alt="206E8EA5-E533-4FF9-A5C7-59D44410AB69_1_105_c" style="zoom:50%;" />
+<img src="https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2022-01-06-041441.jpg" alt="206E8EA5-E533-4FF9-A5C7-59D44410AB69_1_105_c" style="zoom:50%;" />
 
 吃了杭州的特色早点
 
-<img src="/Users/ahianzhang/Pictures/Photos Library.photoslibrary/resources/derivatives/2/206E8EA5-E533-4FF9-A5C7-59D44410AB69_1_105_c.jpeg" alt="206E8EA5-E533-4FF9-A5C7-59D44410AB69_1_105_c" style="zoom:50%;" />
+<img src="https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2022-01-06-041446.jpg" alt="206E8EA5-E533-4FF9-A5C7-59D44410AB69_1_105_c" style="zoom:50%;" />
 
 绕着西湖走了一圈
 
-![1FE43DE6-3709-460B-8B1A-8361CA1A7A5E_1_105_c](https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2022-01-06-033541.jpg)
+![1FE43DE6-3709-460B-8B1A-8361CA1A7A5E_1_105_c](https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2022-01-06-041450.jpg)
 
 ![D7DAEAF4-4F68-463E-A76B-9D732CCA6AF5_1_105_c](https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2022-01-06-033639.jpg)
 
