@@ -31,7 +31,11 @@ categories: ["总结"]
 
 买了份特色的杭州熏鱼
 
-<img src="https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2022-01-06-041441.jpg" alt="206E8EA5-E533-4FF9-A5C7-59D44410AB69_1_105_c" />
+![](https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2022-01-07-041035.jpg)
+
+
+
+
 
 吃了杭州的特色早点
 
