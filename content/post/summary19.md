@@ -2,7 +2,7 @@
 title: "Mac OS 下打造 golang nvim 编程环境之基础配置"
 date: 2022-03-29T22:09:13+08:00
 tags: ["总结"]
-categories: ["vim","golang"]
+categories: ["Vim","Golang"]
 
 ---
 
