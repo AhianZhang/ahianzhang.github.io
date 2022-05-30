@@ -3,7 +3,6 @@ title: "Golang Array 和 Slice 区别"
 date: 2022-04-22T16:30:54+08:00
 tags: ["总结"]
 categories: ["Golang"]
-draft: true
 ---
 
 开始学习 Golang 时，对于 array 和 slice 的理解并不深入，还有很多疑惑的困扰着我。于是就深入的研究了一下。
