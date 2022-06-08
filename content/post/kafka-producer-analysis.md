@@ -22,7 +22,7 @@ public class MyProducer {
         props.put("acks", "all");
         // 重试次数
         props.put("retries", 0);
-        // 指定 Buffer Pool 大小，超过
+        // 指定 Buffer Pool 大小
         props.put("batch.size", 16384);
         // ProducerBatch 发送时间，如果 batch.size 未达到，但是 linger ms 时间达到，则会发送次 Batch 消息
         props.put("linger.ms", 10000); // 10s 发送
@@ -60,5 +60,27 @@ public class MyProducer {
 
 Producer 参数部分是控制 Kafka 高效稳定发送消息的关键，常用的参数已经写到代码中。如果需要查看全部 Producer 参数，可以在代码开启 Debug 模式运行查看。
 
+---
+
 我们主要分析一下 Send 的原理
+
+![image-20220608223610937](https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2022-06-08-143612.png)
+
+Kafka 客户端主要由一个主线程，一个缓冲器，一个发送线程三个部分组成。
+
+主线程做的操作是对消息进行生成、拦截器处理、序列化、分区器处理然后将格式化的消息发送到 RecordAccumulator 缓存中。
+
+缓存的作用是将消息批量发送以减少 IO 次数，当一条消息会经过分区器路由到对应分区的缓存队列中，如果没有则会创建。
+
+如果缓存大小达到了``batch.size``后会唤醒 sender 线程，或者 sender 线程等待时间到了``linger.ms``值后会检查缓存中待发送的数据。
+
+sender 线程负责处理发送前的数据封装，将缓存中的分区消息转成 <Node,Request> 格式，这样就完成了应用逻辑到网络 I/O 层面的转换。
+
+最后准备好发送的消息经过 Nio Selecor 发送到 Broker 集群中，然后 Broker 会进行响应 Response，然后 sender 线程决定重试或者删除缓存。
+
+在 NetWorkClient 中维护了一个``InFlightRequests``数据结构主要是``Map<NodeId,Deque<Request>>``，用来管理请求和元数据，默认每个链接能够缓存 5 个 request，超过后将不会再向此连接发送请求，除非接收到 broker 的响应。当对应的 NodeId 的请求堆积了 5 个，此时这个连接可能出现负载问题无法快速处理问题，那再向这个NodeId 上发送请求肯定会加剧堆积的情况。
+
+
+
+总结：Kafka Producer 在设计上利用缓存来提升吞吐量、利用两个线程区分不同的工作内容，整体设计非常的清晰和优雅。
 
