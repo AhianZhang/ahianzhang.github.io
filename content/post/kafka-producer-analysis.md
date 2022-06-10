@@ -3,7 +3,6 @@ title: "Kafka Java 客户端 Producer 原理分析"
 date: 2022-06-06T13:41:05+08:00
 tags: ["Kafka"]
 categories: ["总结"]
-draft: true
 ---
 
 Kafka Producer Java 客户端如下：

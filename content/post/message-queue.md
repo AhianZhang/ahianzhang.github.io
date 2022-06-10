@@ -24,3 +24,6 @@ categories: ["总结"]
 Kafka多用于数据处理方面。一个 Broker 中可以有多个 Topic，每个 Topic 下又可以有多个 Partition，Kafka 保证是每个 Partition 内部有序。在消费消息时监听 Topic，此时接收到的数据并非是严格有序的，要想做到有序最简单的方式就是一个 Topic 只有一个 Partition。同一个消费组内，消息只会被一个消费者消费；如果两个不同的消费组内监听同一个 Topic 消息，那么这些消息会被这两个消费组内的某个消费者消费。
 
 ![image-20220529233953651](https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2022-05-29-153955.png)
+
+# Kafka 实现类似 RabbitMQ 的 Topic 功能
+
