@@ -18,14 +18,49 @@ categories: ["总结"]
 ## 搜索召回逻辑
 
 - 索引名称：default
-- 分析方式：中文-电商分析
-- 字段：标题(title)、款号(sku)、品牌(brand)、末级品类(category)、全品类(category_lines)
+- 分词方式：中文-电商分析
+- 字段：标题(title)、款号(sku)、品牌(brand)、全品类(category_lines)
 - 词典：同义词、停顿词
+
+---
+
+- 索引名称：f_title
+- 分词方式：模糊分析
+- 字段：f_title
+
+---
+
+- 索引名称：fuzzy_brand
+- 分词方式：模糊分析
+- 字段：fuzzy_brand
+
+---
+
+- 索引名称：fuzzy_category_lines
+- 分词方式：模糊分析
+- 字段：fuzzy_category_lines
 
 ## 搜索排序逻辑
 
 - 基础排序：static_bm25 ，静态文本相关性，用于衡量query与文档的匹配度
-- 业务排序：无，此处可以优化，如果简单表达式不能满足要求则需要升级实例并使用 cava 进行自定义排序
+
+- 业务排序：text_relevance，按照排序因子进行设置，如果简单表达式不能满足要求则需要升级实例并使用 cava 进行自定义排序。
+
+  举例来说，我想让搜索结果命中展示顺序为 title>brand>category_lines，那么我们配置的业务表达式为
+
+  ```
+  text_relevance(f_title)*3 +  text_relevance(fuzzy_brand)*2 + text_relevance(fuzzy_category_lines)
+  ```
+
+  此时搜索语句对应为
+
+  ```
+  query=f_title:"运动鞋" OR fuzzy_brand:"运动鞋" OR fuzzy_cates:"运动鞋"
+  ```
+
+  ![image-20220621171644689](https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2022-06-21-091646.png)
+
+  可以看出使用了 text_relevance 后会对三个索引进行加权算分。
 
 ## 数据采集
 
@@ -46,3 +81,9 @@ categories: ["总结"]
 全量更新：每天凌晨 1 点钟进行同步，可手动触发
 
 增量更新：针对主数据变更近实时更新
+
+# 总结
+
+搜索核心离不开分词、相关性算分，OpenSearch 内置了大量的 [分析器](https://help.aliyun.com/document_detail/179424.html) 以及[相关性搜索实践](https://help.aliyun.com/document_detail/29186.html)
+
+欢迎交流搜索相关问题 ahianzhang@gamil.com
