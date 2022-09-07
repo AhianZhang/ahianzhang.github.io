@@ -63,7 +63,7 @@ AMQP 默认使用的是 direct 模式，此模式的特点是 routing key 和 bi
 
 ### topic
 
-topic 模式可以说是 direct 的一种扩展，这个扩展支持使用通配符来进行路由，规则是 **#** 代表一个单词，***** 代表多个单词，下图中的消息能够被 Consumer A 和 Consumer C 消费，而 Consumer B 所监听的队列绑定的是 a.* ，最多只能是两个字母，不匹配。
+topic 模式可以说是 direct 的一种扩展，这个扩展支持使用通配符来进行路由，规则是 **#** 代表多个单词，***** 代表单个单词，下图中的消息能够被 Consumer A 和 Consumer C 消费，而 Consumer B 所监听的队列绑定的是 a.* ，最多只能是两个字母，不匹配。
 
 ![](https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2020-03-22-123935.png)
 
