@@ -77,6 +77,13 @@ disqusShortname = "AhianZhang"  ## 是否开启disqus评论，不要和utteranc�
 [menu]
 
   [[menu.main]]
+    identifier = "search-recommend"
+    name = "搜索 && 推荐"
+    url = "/search-recommend/"
+    weight = 2
+
+
+  [[menu.main]]
     identifier = "archives"
     name = "归档"
     url = "/archives/"

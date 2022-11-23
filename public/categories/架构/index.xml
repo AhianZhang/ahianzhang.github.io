@@ -6,7 +6,16 @@
     <description>Recent content in 架构 on 象帝浮华生</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 29 Mar 2020 18:09:13 +0000</lastBuildDate><atom:link href="https://www.ahianzhang.com/categories/%E6%9E%B6%E6%9E%84/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 16 Mar 2022 11:47:50 +0800</lastBuildDate><atom:link href="https://www.ahianzhang.com/categories/%E6%9E%B6%E6%9E%84/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>电商搜索技术总结</title>
+      <link>https://www.ahianzhang.com/post/summary18/</link>
+      <pubDate>Wed, 16 Mar 2022 11:47:50 +0800</pubDate>
+      
+      <guid>https://www.ahianzhang.com/post/summary18/</guid>
+      <description>回顾 本篇文章我们针对于上文”电商搜索业务总结“中的业务需求进行拆解，并以技术角度进行分析。 对于关系好的商户我想把他们的品牌优先展示，增加曝光率 新上架一款商品，我想立即在平台上搜索到 当我使用具体款号搜索时，我希望只展示这一款的商品 我希望在搜索结果页中看到更多的品牌，而不是整页都是同</description>
+    </item>
+    
     <item>
       <title>rabbitmq 如何提高可靠性并保证消费端幂等</title>
       <link>https://www.ahianzhang.com/post/rabbitmq-reliability/</link>

@@ -75,6 +75,217 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/rabbit-network/" title="RabbitMQ connection channel 的关系 ">RabbitMQ connection channel 的关系 </a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2022年9月7日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E6%80%BB%E7%BB%93'>总结</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            Rabbit java client 发送消息代码如下 1 2 3 4 5 6 7 8 Connection connection = connectionFactory.newConnection(); Channel channel = connection.createChannel(); AMQP.BasicProperties basicProperties = new AMQP.BasicProperties().builder() .messageId(UUID.randomUUID().toString()) .build(); channel.basicPublish(&#34;biz&#34;,&#34;dev.hello&#34;,false,basicProperties,&#34;Hello World&#34;.getBytes()); channel.close(); connection.close(); 对于 AMQP 0-9-1 网络连接，一个客户端会与 Broker 建立一个 Tcp 长连接（Connection），并使用轻量级连接（Channel）来实现多路复用的效果。……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/rabbit-network/">阅读全文</a></p>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/kafka-producer-analysis/" title="Kafka Java 客户端 Producer 原理分析">Kafka Java 客户端 Producer 原理分析</a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2022年6月6日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E6%80%BB%E7%BB%93'>总结</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            Kafka 是我认为最值得深入研究的一个消息队列，它的官方文档写的非常详尽，从配置到使用，从设计到实现无不体现研发的技术功底。 Kafka 已经发展到 3.x 时代，增加了很多的功能，比如幂等、事务等，如今已经能够保证消息 100% 消费了。 阅读源码能够有两点好处：一个是能够在工作中对 Kafka 进行深度优化，二是能够学习到消息……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/kafka-producer-analysis/">阅读全文</a></p>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/message-queue/" title="RabbitMQ 和 Kafka 应用原理简单对比">RabbitMQ 和 Kafka 应用原理简单对比</a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2022年5月29日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E6%80%BB%E7%BB%93'>总结</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            在实际工作中用到了 RabbitMQ 和 Kafka，本篇文章围绕二者在使用上的一些认知进行展开，不涉及技术细节，仅做实践上的参考。 RabbitMQ 多用于处理业务系统之间的信息交互，所以需要保证消息的可靠性和幂等性，我在项目中实际使用的是 at-least-once 投递方式，然后针对每条消息做幂等处理。 在使用 Spring Boot AMQP 或者其他 Rabbit clien开发……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/message-queue/">阅读全文</a></p>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/summary20/" title="阿里云 OpenSearch 介绍">阿里云 OpenSearch 介绍</a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2022年5月27日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E6%80%BB%E7%BB%93'>总结</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            阿里云 OpenSearch 是一款基于 Ha3 引擎研发的商用搜索产品。在使用上给我的个人感受可以说 OpenSearch 是一套企业级搜索的完整解决方案的落地。下面我们来看一下 OpenSearch 有哪些功能。 现行搜索逻辑 下拉提示 使用 OpenSearch 官方算法模型，针对标题(title)、分类(category lines)、品牌(brand) 属性抽取值并结合高频……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/summary20/">阅读全文</a></p>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/golang-01/" title="Golang Array 和 Slice 区别">Golang Array 和 Slice 区别</a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2022年4月22日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/Golang'>Golang</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            开始学习 Golang 时，对于 array 和 slice 的理解并不深入，还有很多疑惑的困扰着我。于是就深入的研究了一下。 Array 与 Slice 的 区别 array 是固定长度的，声明时必须是常量大小，定义好后不可更改，更不会扩容，超出访问地址后会 panic； array 是值类型，将旧的 array 赋值给新的 array 相当于两个完全独立的 array； slice 是 struct 类型，可动态声……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/golang-01/">阅读全文</a></p>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/summary19/" title="Mac OS 下打造 golang nvim 编程环境之基础配置">Mac OS 下打造 golang nvim 编程环境之基础配置</a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2022年3月29日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/Vim'>Vim</a></span>
+            
+            <span class="meta-category"><a href='/categories/Golang'>Golang</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            目的 为了提升编程效率，本着少即是多的原则，开始打造自己的精兵利器。 先看效果 使用 vim 的好处就是不需要再依赖于鼠标或者妙控板之类的外设，能专注于编码工作，所见即所得。 依赖环境 对于本次配置，基本上采用的都是就目前来说最新的版本，如下 checklist： Golang v1.18 iterm2 Oh-my-zsh brew Vim NeoVim Ctags vim-plug vim-go coc-go Hack Nerd Font 为了不受……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/summary19/">阅读全文</a></p>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/summary18/" title="电商搜索技术总结">电商搜索技术总结</a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2022年3月16日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E6%90%9C%E7%B4%A2'>搜索</a></span>
+            
+            <span class="meta-category"><a href='/categories/%E6%9E%B6%E6%9E%84'>架构</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            回顾 本篇文章我们针对于上文”电商搜索业务总结“中的业务需求进行拆解，并以技术角度进行分析。 对于关系好的商户我想把他们的品牌优先展示，增加曝光率 新上架一款商品，我想立即在平台上搜索到 当我使用具体款号搜索时，我希望只展示这一款的商品 我希望在搜索结果页中看到更多的品牌，而不是整页都是同……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/summary18/">阅读全文</a></p>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/summary17/" title="电商搜索业务总结">电商搜索业务总结</a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2022年3月15日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E6%90%9C%E7%B4%A2'>搜索</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            在电商领域中，搜索和推荐是主要的流量入口，是每个电商平台不可或缺的部分，搜索功能是在用户明确意图下，尽可能的给其提供想要的商品，从而促成下单。本篇文章主要讲的是搜索的业务，涉及的技术方面将放到后面的章节中。 流量入口 以上品折扣这个网站为例，先来看一下电商搜索的入口都有哪些： 首页 首页……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/summary17/">阅读全文</a></p>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://www.ahianzhang.com/post/summary16/" title="2021 年终总结">2021 年终总结</a>
+            </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2022年1月6日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/%E6%80%BB%E7%BB%93'>总结</a></span>
+            
+        </div>
+        
+        <div class="post-content">
+            2021 年对我个人来说是很精彩的一年，下面将以时间线的方式记录几个重要的时刻。 买了第一辆摩托车 买了第二辆摩托车 ’ 做公益项目 做公益项目给我印象最深的是我和朋友深夜 12 点吃着从便利蜂买的关东煮，坐在公司旁边的咖啡厅外的桌子上讨论技术问题，但是当产品孵化完成的喜悦是真的很有自豪感的。 偶然的机会……
+        </div>
+        <p class="readmore"><a href="https://www.ahianzhang.com/post/summary16/">阅读全文</a></p>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://www.ahianzhang.com/post/cypress/" title="Cypress 实践总结">Cypress 实践总结</a>
             </h1>
         </header>
@@ -95,213 +306,6 @@
             前言 最近接手了一个前端的项目，这个项目使用宜搭低代码平台进行搭建，由于每次修改代码或者调整组件时都有可能造成其他问题，影响整体的项目质量，然而又不想每次都进行手动的“点点点”操作，于是就打算研究一下如今流行的前端自动化框架 cypress。 下载 使用 npm 进行下载并运行 1 2 3 4 5 6 mkidr automation-test cd……
         </div>
         <p class="readmore"><a href="https://www.ahianzhang.com/post/cypress/">阅读全文</a></p>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://www.ahianzhang.com/post/summary15/" title="年终总结">年终总结</a>
-            </h1>
-        </header>
-        <date class="post-meta meta-date">
-            2021年2月17日
-        </date>
-        
-        <div class="post-meta">
-            <span>|</span>
-            
-            <span class="meta-category"><a href='/categories/%E6%80%BB%E7%BB%93'>总结</a></span>
-            
-        </div>
-        
-        <div class="post-content">
-            2020 年注定是不平凡的一年，在新冠疫情的影响下，居家隔离、办公、最低工资等等，企业即要保护打工人的安全又要保障公司的生存，可谓是手段频出。 今年是以自我提升为主。学习了极客时间的设计模式专栏，对设计模式有了新的认知，行为型、结构型、创建型各自的用途，以及为什么要使用设计模式，最后在实际……
-        </div>
-        <p class="readmore"><a href="https://www.ahianzhang.com/post/summary15/">阅读全文</a></p>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://www.ahianzhang.com/post/spring-boot-cucumber/" title="使用 cucumber 进行行为驱动开发（BDD）">使用 cucumber 进行行为驱动开发（BDD）</a>
-            </h1>
-        </header>
-        <date class="post-meta meta-date">
-            2020年10月20日
-        </date>
-        
-        <div class="post-meta">
-            <span>|</span>
-            
-            <span class="meta-category"><a href='/categories/%E6%80%BB%E7%BB%93'>总结</a></span>
-            
-        </div>
-        
-        <div class="post-content">
-            前言 保证软件质量的方式多种多样，根据测试金字塔上所描绘的，单元测试是最有效的，但是在公司内部实践的时候却遇到了一些问题，比如赶进度来不及写单元测试、改了代码逻辑单元测试也需要跟着变、验收时同样会有很多 bug，总结下来大概有几个原因： 需求分析时有很多细节没有考虑到（这个不可避免） 测……
-        </div>
-        <p class="readmore"><a href="https://www.ahianzhang.com/post/spring-boot-cucumber/">阅读全文</a></p>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://www.ahianzhang.com/post/spring-cloud-intergration/" title="微服务应用集成 SpringCloud 步骤">微服务应用集成 SpringCloud 步骤</a>
-            </h1>
-        </header>
-        <date class="post-meta meta-date">
-            2020年10月13日
-        </date>
-        
-        <div class="post-meta">
-            <span>|</span>
-            
-            <span class="meta-category"><a href='/categories/%E6%80%BB%E7%BB%93'>总结</a></span>
-            
-        </div>
-        
-        <div class="post-content">
-            前言 微服务开发模式能够将复杂的业务拆分成独立的更细粒度服务，一定程度上降低了业务复杂度，但是随之而来的是如何保证各个服务的可靠性和稳定性，SpringCloud 出现的目的是为了解决这些在服务拆分后会遇到的通用问题。配置中心能让同一服务多实例间无需重启快速更新配置、注册中心能对应用……
-        </div>
-        <p class="readmore"><a href="https://www.ahianzhang.com/post/spring-cloud-intergration/">阅读全文</a></p>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://www.ahianzhang.com/post/change-data-capture/" title="电商搜索数据同步方案">电商搜索数据同步方案</a>
-            </h1>
-        </header>
-        <date class="post-meta meta-date">
-            2020年10月10日
-        </date>
-        
-        <div class="post-meta">
-            <span>|</span>
-            
-            <span class="meta-category"><a href='/categories/%E6%90%9C%E7%B4%A2'>搜索</a></span>
-            
-        </div>
-        
-        <div class="post-content">
-            前言 搜索系统主要分为两个部分一个是在线服务、一个是离线服务，在线服务是指排序、打分等靠近用户侧的部分，离线服务负责这篇文章属于离线部分范畴，本篇文章只是提供一个基础的思路，实际使用还需要适当调整和拓展。无论哪种方式都应该保证全量高吞吐、增量低延时的这个原则。 方案 定时任务主动拉取更……
-        </div>
-        <p class="readmore"><a href="https://www.ahianzhang.com/post/change-data-capture/">阅读全文</a></p>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://www.ahianzhang.com/post/summary14/" title="通过一道数值转换题重温计算机补码">通过一道数值转换题重温计算机补码</a>
-            </h1>
-        </header>
-        <date class="post-meta meta-date">
-            2020年7月2日
-        </date>
-        
-        <div class="post-meta">
-            <span>|</span>
-            
-            <span class="meta-category"><a href='/categories/%E6%80%BB%E7%BB%93'>总结</a></span>
-            
-        </div>
-        
-        <div class="post-content">
-            问题 昨天同事和我聊了他偶然间看到的一道面试题，引出了后面的深入分析。 1 System.out.println(Integer.valueOf((char)-1)); //output: 65535 为什么输出是 65535 而不是 -1 呢？ 分析 先回顾一下计算机相关的知识点： 原码(True form) 原码是指一个二进制数左边加上符号位后所得到的码，且当二进制数大于0时，符号位为0；二进制数小于0时，符号位为1；二进制数等于0时……
-        </div>
-        <p class="readmore"><a href="https://www.ahianzhang.com/post/summary14/">阅读全文</a></p>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://www.ahianzhang.com/post/macos-tools/" title="macOS 系统推荐的一些软件">macOS 系统推荐的一些软件</a>
-            </h1>
-        </header>
-        <date class="post-meta meta-date">
-            2020年6月25日
-        </date>
-        
-        <div class="post-meta">
-            <span>|</span>
-            
-            <span class="meta-category"><a href='/categories/%E6%80%BB%E7%BB%93'>总结</a></span>
-            
-        </div>
-        
-        <div class="post-content">
-            翻译 词典：mac 自带的，点按翻译 沙拉查词： chrome 上画线翻译 Alfred workflow + 有道翻译：支持查询单词并且回车键入当前位置 编程 IntelliJ IDEA：Java 工程利器 VSCode：写 React 和 Angular SSH 工具 electerm：最新发现的（2020-7-14），挺好用 壁纸 pap.er： 免费的，还不错 笔记 印象笔记 音乐 Spotif……
-        </div>
-        <p class="readmore"><a href="https://www.ahianzhang.com/post/macos-tools/">阅读全文</a></p>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://www.ahianzhang.com/post/devops-01/" title="DevOps 实施规划（持续更新）">DevOps 实施规划（持续更新）</a>
-            </h1>
-        </header>
-        <date class="post-meta meta-date">
-            2020年5月8日
-        </date>
-        
-        <div class="post-meta">
-            <span>|</span>
-            
-            <span class="meta-category"><a href='/categories/DevOps'>DevOps</a></span>
-            
-        </div>
-        
-        <div class="post-content">
-            下面是我在日常工作中碰到的现状，相信大多数中小企业也会有类似情况 需求不明确 流程不够自动化 没有写单元测试的意识 上班摸鱼 不愿接受新思想 工作总是被打断 服务器资源利用率不高 出现问题的原因有领导的问题，也有团队成员的问题。但问题已经出现，此时不应该是无休止的抱怨，而是寻找解决问题办法。我们……
-        </div>
-        <p class="readmore"><a href="https://www.ahianzhang.com/post/devops-01/">阅读全文</a></p>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://www.ahianzhang.com/post/rabbitmq-reliability/" title="rabbitmq 如何提高可靠性并保证消费端幂等">rabbitmq 如何提高可靠性并保证消费端幂等</a>
-            </h1>
-        </header>
-        <date class="post-meta meta-date">
-            2020年3月29日
-        </date>
-        
-        <div class="post-meta">
-            <span>|</span>
-            
-            <span class="meta-category"><a href='/categories/%E6%9E%B6%E6%9E%84'>架构</a></span>
-            
-        </div>
-        
-        <div class="post-content">
-            什么是消息的可靠性 简单讲就是，一条消息由生产者发送出来，到 broker 上，存储到消息队列，再被消费者成功的消费。如果消息传着传着就传没了，此时消息就是不可靠的。 为什么要提高消息可靠性 拿订单或者交易举例，但凡涉及到与钱相关的系统，不允许出现任何数据偏差，如果因为在使用消息队列而丢失了数据，那……
-        </div>
-        <p class="readmore"><a href="https://www.ahianzhang.com/post/rabbitmq-reliability/">阅读全文</a></p>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://www.ahianzhang.com/post/rabbit-mq-basic-concept/" title="AMQ Model总结">AMQ Model总结</a>
-            </h1>
-        </header>
-        <date class="post-meta meta-date">
-            2020年3月21日
-        </date>
-        
-        <div class="post-meta">
-            <span>|</span>
-            
-            <span class="meta-category"><a href='/categories/%E5%8D%8F%E8%AE%AE'>协议</a></span>
-            
-        </div>
-        
-        <div class="post-content">
-            前言 最近在写公司的消息队列组件，因为使用的是 RabbitMQ，其实现的规范是基于 AMQP-0-9-1 ，所以抽时间把官方的规范过了一遍，整理出主要的内容，记录于此。 AMQ 模型架构(AMQ Model Architecture) 基础组件 Publisher application 发送者 Consumer application 消费者 Server AMQP 服务器 Virtual host 在 Server 中提供逻辑隔离，类似于 MySQL 数据库中的多个表 Exchange 将消息根据不同的配置路由到……
-        </div>
-        <p class="readmore"><a href="https://www.ahianzhang.com/post/rabbit-mq-basic-concept/">阅读全文</a></p>
     </article>
     
     
@@ -334,6 +338,10 @@
     
     <li >
         <a href="https://www.ahianzhang.com/page/6/">6</a>
+    </li>
+    
+    <li >
+        <a href="https://www.ahianzhang.com/page/7/">7</a>
     </li>
     
 
@@ -398,43 +406,43 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://www.ahianzhang.com/post/rabbit-network/" title="RabbitMQ connection channel 的关系 ">RabbitMQ connection channel 的关系 </a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/kafka-producer-analysis/" title="Kafka Java 客户端 Producer 原理分析">Kafka Java 客户端 Producer 原理分析</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/message-queue/" title="RabbitMQ 和 Kafka 应用原理简单对比">RabbitMQ 和 Kafka 应用原理简单对比</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/summary20/" title="阿里云 OpenSearch 介绍">阿里云 OpenSearch 介绍</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/golang-01/" title="Golang Array 和 Slice 区别">Golang Array 和 Slice 区别</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/summary19/" title="Mac OS 下打造 golang nvim 编程环境之基础配置">Mac OS 下打造 golang nvim 编程环境之基础配置</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/summary18/" title="电商搜索技术总结">电商搜索技术总结</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/summary17/" title="电商搜索业务总结">电商搜索业务总结</a>
+    </li>
+    
+    <li>
+        <a href="https://www.ahianzhang.com/post/summary16/" title="2021 年终总结">2021 年终总结</a>
+    </li>
+    
+    <li>
         <a href="https://www.ahianzhang.com/post/cypress/" title="Cypress 实践总结">Cypress 实践总结</a>
-    </li>
-    
-    <li>
-        <a href="https://www.ahianzhang.com/post/summary15/" title="年终总结">年终总结</a>
-    </li>
-    
-    <li>
-        <a href="https://www.ahianzhang.com/post/spring-boot-cucumber/" title="使用 cucumber 进行行为驱动开发（BDD）">使用 cucumber 进行行为驱动开发（BDD）</a>
-    </li>
-    
-    <li>
-        <a href="https://www.ahianzhang.com/post/spring-cloud-intergration/" title="微服务应用集成 SpringCloud 步骤">微服务应用集成 SpringCloud 步骤</a>
-    </li>
-    
-    <li>
-        <a href="https://www.ahianzhang.com/post/change-data-capture/" title="电商搜索数据同步方案">电商搜索数据同步方案</a>
-    </li>
-    
-    <li>
-        <a href="https://www.ahianzhang.com/post/summary14/" title="通过一道数值转换题重温计算机补码">通过一道数值转换题重温计算机补码</a>
-    </li>
-    
-    <li>
-        <a href="https://www.ahianzhang.com/post/macos-tools/" title="macOS 系统推荐的一些软件">macOS 系统推荐的一些软件</a>
-    </li>
-    
-    <li>
-        <a href="https://www.ahianzhang.com/post/devops-01/" title="DevOps 实施规划（持续更新）">DevOps 实施规划（持续更新）</a>
-    </li>
-    
-    <li>
-        <a href="https://www.ahianzhang.com/post/rabbitmq-reliability/" title="rabbitmq 如何提高可靠性并保证消费端幂等">rabbitmq 如何提高可靠性并保证消费端幂等</a>
-    </li>
-    
-    <li>
-        <a href="https://www.ahianzhang.com/post/rabbit-mq-basic-concept/" title="AMQ Model总结">AMQ Model总结</a>
     </li>
     
 </ul>
@@ -450,17 +458,21 @@
     
     <li><a href="https://www.ahianzhang.com/categories/DevOps/">DevOps (2)</a></li>
     
+    <li><a href="https://www.ahianzhang.com/categories/Golang/">Golang (2)</a></li>
+    
     <li><a href="https://www.ahianzhang.com/categories/TDD/">TDD (1)</a></li>
+    
+    <li><a href="https://www.ahianzhang.com/categories/Vim/">Vim (1)</a></li>
     
     <li><a href="https://www.ahianzhang.com/categories/XP/">XP (1)</a></li>
     
     <li><a href="https://www.ahianzhang.com/categories/%E5%8D%8F%E8%AE%AE/">协议 (2)</a></li>
     
-    <li><a href="https://www.ahianzhang.com/categories/%E6%80%BB%E7%BB%93/">总结 (19)</a></li>
+    <li><a href="https://www.ahianzhang.com/categories/%E6%80%BB%E7%BB%93/">总结 (24)</a></li>
     
-    <li><a href="https://www.ahianzhang.com/categories/%E6%90%9C%E7%B4%A2/">搜索 (6)</a></li>
+    <li><a href="https://www.ahianzhang.com/categories/%E6%90%9C%E7%B4%A2/">搜索 (8)</a></li>
     
-    <li><a href="https://www.ahianzhang.com/categories/%E6%9E%B6%E6%9E%84/">架构 (16)</a></li>
+    <li><a href="https://www.ahianzhang.com/categories/%E6%9E%B6%E6%9E%84/">架构 (17)</a></li>
     
     <li><a href="https://www.ahianzhang.com/categories/%E7%AE%97%E6%B3%95/">算法 (6)</a></li>
     
@@ -477,7 +489,13 @@
     
     <a href="https://www.ahianzhang.com/tags/ElasticSearch/">ElasticSearch</a>
     
+    <a href="https://www.ahianzhang.com/tags/Kafka/">Kafka</a>
+    
     <a href="https://www.ahianzhang.com/tags/LeetCode/">LeetCode</a>
+    
+    <a href="https://www.ahianzhang.com/tags/OpenSearch/">OpenSearch</a>
+    
+    <a href="https://www.ahianzhang.com/tags/RabbitMQ/">RabbitMQ</a>
     
     <a href="https://www.ahianzhang.com/tags/SpringCloud/">SpringCloud</a>
     
@@ -491,7 +509,7 @@
     
     <a href="https://www.ahianzhang.com/tags/os/">os</a>
     
-    <a href="https://www.ahianzhang.com/tags/rabbitmq/">rabbitmq</a>
+    <a href="https://www.ahianzhang.com/tags/RabbitMQ/">RabbitMQ</a>
     
     <a href="https://www.ahianzhang.com/tags/rsocket/">rsocket</a>
     
@@ -509,6 +527,8 @@
     
     <a href="https://www.ahianzhang.com/tags/%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/">性能调优</a>
     
+    <a href="https://www.ahianzhang.com/tags/%E6%80%BB%E7%BB%93/">总结</a>
+    
     <a href="https://www.ahianzhang.com/tags/%E6%8A%80%E6%9C%AF/">技术</a>
     
     <a href="https://www.ahianzhang.com/tags/%E6%95%88%E7%8E%87/">效率</a>
@@ -524,6 +544,8 @@
     <a href="https://www.ahianzhang.com/tags/%E6%A6%82%E8%BF%B0/">概述</a>
     
     <a href="https://www.ahianzhang.com/tags/%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/">测试工具</a>
+    
+    <a href="https://www.ahianzhang.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</a>
     
     <a href="https://www.ahianzhang.com/tags/%E7%90%86%E8%AE%BA/">理论</a>
     
@@ -555,6 +577,10 @@
         
         <li>
             <a target="_blank" href="http://www.hankcs.com/" title="hankcs">hankcs</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.shenyanchao.cn/" title="申艳超博客">申艳超</a>
         </li>
         
     </ul>
