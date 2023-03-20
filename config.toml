@@ -1,6 +1,6 @@
 baseURL = "https://www.ahianzhang.com"
 languageCode = "zh-CN"
-title = "象帝浮华生"
+title = "浮华生"
 theme = "maupassant"
 googleAnalytics = ""  # UA-XXXXXXXX-X
 
@@ -15,10 +15,10 @@ summaryLength = 140
 disqusShortname = "AhianZhang"  ## 是否开启disqus评论，不要和utteranc同时开启
 
 [author]
-  name = "象帝浮华生"
+  name = "浮华生"
 
 [params]
-  author = "象帝浮华生"
+  author = "浮华生"
   subtitle = "大道至简"
   keywords = "Java 敏捷搜索"
   description = ""
@@ -27,7 +27,7 @@ disqusShortname = "AhianZhang"  ## 是否开启disqus评论，不要和utteranc�
   localSearch = true # 启用本地搜索
 
   # 这里我存放在了主题的static文件夹里，根目录的似乎也可以
-  customCSS = ['douban.css', 'other.css']
+  customCSS = ['douban.css', 'other.css', 'custom.css']
   # if ['custom.css'], load '/static/css/custom.css' file
   customJS = ['douban.js']
   # if ['custom.js'], load '/static/js/custom.js' file
