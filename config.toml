@@ -10,7 +10,7 @@ preserveTaxonomyNames = true
 disablePathToLower = true
 
 hasCJKLanguage = true
-summaryLength = 140
+summaryLength = 70
 
 disqusShortname = "AhianZhang"  ## 是否开启disqus评论，不要和utteranc同时开启
 
@@ -20,7 +20,7 @@ disqusShortname = "AhianZhang"  ## 是否开启disqus评论，不要和utteranc�
 [params]
   author = "浮华生"
   subtitle = "大道至简"
-  keywords = "Java 敏捷搜索"
+  keywords = "Java 敏捷搜索推荐 Golang "
   description = ""
   busuanzi = true #启用不算子网页统计
   googleAd = ""  #ca-pub-xxxxxxxxxxxxxx
