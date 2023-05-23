@@ -1,0 +1,244 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=referrer content="no-referrer-when-downgrade"><title>异地机器组网方案 | 浮华生</title><meta property="og:title" content="异地机器组网方案 - 浮华生"><meta property="og:type" content="article"><meta property="article:published_time" content="2023-05-23T10:33:35+08:00"><meta property="article:modified_time" content="2023-05-23T10:33:35+08:00"><meta name=Keywords content="Java 敏捷搜索推荐 Golang"><meta name=description content="异地机器组网方案"><meta name=author content="浮华生"><meta property="og:url" content="https://www.ahianzhang.com/post/summary23/"><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><link rel=stylesheet href=/css/normalize.css><link rel=stylesheet href=/css/style.css><script type=text/javascript src=//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js></script><link rel=stylesheet href=/css/douban.css><link rel=stylesheet href=/css/other.css><link rel=stylesheet href=/css/custom.css></head><body><header id=header class=clearfix><div class=container><div class=col-group><div class=site-name><a id=logo href=https://www.ahianzhang.com>浮华生</a><p class=description>大道至简</p></div><div><nav id=nav-menu class=clearfix><a class=current href=https://www.ahianzhang.com>首页</a>
+<a href=https://www.ahianzhang.com/search-recommend/ title="搜索 && 推荐">搜索 && 推荐</a>
+<a href=https://www.ahianzhang.com/archives/ title=归档>归档</a>
+<a href=https://www.ahianzhang.com/about/ title=关于>关于</a></nav></div></div></div></header><div id=body><div class=container><div class=col-group><div class=col-8 id=main><div class=res-cons><style type=text/css>.post-toc{position:fixed;width:200px;margin-left:-210px;padding:5px 10px;font-family:Athelas,STHeiti,Microsoft Yahei,serif;font-size:12px;border:1px solid rgba(0,0,0,.07);border-radius:5px;background-color:rgba(255,255,255,.98);background-clip:padding-box;-webkit-box-shadow:1px 1px 2px rgba(0,0,0,.125);box-shadow:1px 1px 2px rgba(0,0,0,.125);word-wrap:break-word;white-space:nowrap;-webkit-box-sizing:border-box;box-sizing:border-box;z-index:999;cursor:pointer;max-height:70%;overflow-y:auto;overflow-x:hidden}.post-toc .post-toc-title{width:100%;margin:0 auto;font-size:20px;font-weight:400;text-transform:uppercase;text-align:center}.post-toc .post-toc-content{font-size:15px}.post-toc .post-toc-content>nav>ul{margin:10px 0}.post-toc .post-toc-content ul{padding-left:20px;list-style:square;margin:.5em;line-height:1.8em}.post-toc .post-toc-content ul ul{padding-left:15px;display:none}@media print,screen and (max-width:1057px){.post-toc{display:none}}</style><div class=post-toc style=position:absolute;top:188px><h2 class=post-toc-title>文章目录</h2><div class=post-toc-content><nav id=TableOfContents><ul><li><a href=#下载>下载</a></li><li><a href=#配置环境>配置环境</a></li><li><a href=#修改配置文件>修改配置文件</a></li><li><a href=#创建启动服务>创建启动服务</a></li><li><a href=#创建用户>创建用户</a></li><li><a href=#启动>启动</a><ul><li><a href=#启动测试>启动测试</a></li><li><a href=#使用-systemctl-后台运行>使用 systemctl 后台运行</a></li></ul></li><li><a href=#验证>验证</a></li><li><a href=#操作>操作</a></li></ul><ul><li><a href=#配置>配置</a></li><li><a href=#认证>认证</a></li></ul><ul><li><a href=#配置-1>配置</a></li></ul></nav></div></div><script type=text/javascript>$(document).ready(function(){var postToc=$(".post-toc");if(postToc.length){var leftPos=$("#main").offset().left;if(leftPos<220){postToc.css({"width":leftPos-10,"margin-left":(0-leftPos)})}
+var t=postToc.offset().top-20,a={start:{position:"absolute",top:t},process:{position:"fixed",top:20},};$(window).scroll(function(){var e=$(window).scrollTop();e<t?postToc.css(a.start):postToc.css(a.process)})}})</script><article class=post><header><h1 class=post-title>异地机器组网方案</h1></header><date class="post-meta meta-date">2023年5月23日</date><div class=post-meta><span>|</span>
+<span class=meta-category><a href=/categories/%E6%80%BB%E7%BB%93>总结</a></span></div><div class=post-meta><span id=busuanzi_container_page_pv>|<span id=busuanzi_value_page_pv></span><span>
+阅读</span></span></div><div class=post-content><p>最近要自己做一些项目，需要用到 k8s，自己单机搭建比较耗费性能，于是就利用其他资源：一个台式机、一台笔记本、一台阿里云 ECS，那怎么将这三台机器组到一个局域网内呢？</p><p>通过调研，发现 <a href=https://tailscale.com/>tailscale</a> 似乎满足方案，使用开源的 <a href=https://www.wireguard.com/>WireGuard</a> 协议，能够 p2p 访问，但它是一个商业产品，有连接数的限制，如果个人开发是没什么问题的，但是以后连接的设备一多就需要交钱了。那有没有不收费的？有，<a href=https://github.com/juanfont/headscale>headscale</a>，这个是一个免费开源产品，实现了一个三方的 tailscale 控制服务器，这样连接数的限制就可控了，客户端依然使用 tailscale。下面看一下操作步骤（均在 root 权限下操作）。</p><p>机器配置：</p><p>ecs 1c2g</p><h1 id=安装控制服务器control-server>安装控制服务器(control server)</h1><p>这个控终端最好装在不容易断电、重启的机器上，那 ecs 是最佳的选择</p><h2 id=下载>下载</h2><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#998;font-style:italic># 下载服务端</span>
+wget --output-document<span style=color:#000;font-weight:700>=</span>/usr/local/bin/headscale <span style=color:#d14>\
+</span><span style=color:#d14></span>https://github.com/juanfont/headscale/releases/download/v0.22.3/headscale_0.22.3_linux_amd64
+<span style=color:#998;font-style:italic># 设置执行权限</span>
+chmod +x /usr/local/bin/headscale
+</code></pre></td></tr></table></div></div><h2 id=配置环境>配置环境</h2><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#998;font-style:italic>#创建配置目录：</span>
+mkdir -p /etc/headscale
+
+<span style=color:#998;font-style:italic>#创建目录用来存储数据与证书：</span>
+mkdir -p /var/lib/headscale
+<span style=color:#998;font-style:italic>#创建目录用来存 so 文件</span>
+mkdir -p /var/run/headscale/
+
+<span style=color:#998;font-style:italic>#创建空的 SQLite 数据库文件：</span>
+touch /var/lib/headscale/db.sqlite
+
+touch /var/run/headscale/headscale.sock
+
+
+
+<span style=color:#998;font-style:italic>#　从example 创建 Headscale 配置文件：</span>
+wget https://github.com/juanfont/headscale/raw/main/config-example.yaml -O /etc/headscale/config.yaml
+</code></pre></td></tr></table></div></div><h2 id=修改配置文件>修改配置文件</h2><p>进入到 config.yaml 中修改以下几个点：</p><ul><li>server_url: 设置为<code>http://&lt;公网 ip>:8080</code> 这个要看你当前机器的公网 IP</li><li>randomize_client_port：设为 true</li></ul><h2 id=创建启动服务>创建启动服务</h2><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>vi /etc/systemd/system/headscale.service
+</code></pre></td></tr></table></div></div><p>粘贴下面命令</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#998;font-style:italic># /etc/systemd/system/headscale.service</span>
+<span style=color:#000;font-weight:700>[</span>Unit<span style=color:#000;font-weight:700>]</span>
+<span style=color:teal>Description</span><span style=color:#000;font-weight:700>=</span>headscale controller
+<span style=color:teal>After</span><span style=color:#000;font-weight:700>=</span>syslog.target
+<span style=color:teal>After</span><span style=color:#000;font-weight:700>=</span>network.target
+
+<span style=color:#000;font-weight:700>[</span>Service<span style=color:#000;font-weight:700>]</span>
+<span style=color:teal>Type</span><span style=color:#000;font-weight:700>=</span>simple
+<span style=color:teal>User</span><span style=color:#000;font-weight:700>=</span>headscale
+<span style=color:teal>Group</span><span style=color:#000;font-weight:700>=</span>headscale
+<span style=color:teal>ExecStart</span><span style=color:#000;font-weight:700>=</span>/usr/local/bin/headscale serve
+<span style=color:teal>Restart</span><span style=color:#000;font-weight:700>=</span>always
+<span style=color:teal>RestartSec</span><span style=color:#000;font-weight:700>=</span><span style=color:#099>5</span>
+
+<span style=color:#998;font-style:italic># Optional security enhancements</span>
+<span style=color:teal>NoNewPrivileges</span><span style=color:#000;font-weight:700>=</span>yes
+<span style=color:teal>PrivateTmp</span><span style=color:#000;font-weight:700>=</span>yes
+<span style=color:teal>ProtectSystem</span><span style=color:#000;font-weight:700>=</span>strict
+<span style=color:teal>ProtectHome</span><span style=color:#000;font-weight:700>=</span>yes
+<span style=color:teal>ReadWritePaths</span><span style=color:#000;font-weight:700>=</span>/var/lib/headscale /var/run/headscale
+<span style=color:teal>AmbientCapabilities</span><span style=color:#000;font-weight:700>=</span>CAP_NET_BIND_SERVICE
+<span style=color:teal>RuntimeDirectory</span><span style=color:#000;font-weight:700>=</span>headscale
+
+<span style=color:#000;font-weight:700>[</span>Install<span style=color:#000;font-weight:700>]</span>
+<span style=color:teal>WantedBy</span><span style=color:#000;font-weight:700>=</span>multi-user.target
+</code></pre></td></tr></table></div></div><h2 id=创建用户>创建用户</h2><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">8
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#998;font-style:italic># 创建 headscale 用户：</span>
+
+useradd headscale -d /home/headscale -m
+
+<span style=color:#998;font-style:italic># 修改 /var/lib/headscale 目录的 owner：</span>
+
+chown -R headscale:headscale /var/lib/headscale
+
+</code></pre></td></tr></table></div></div><h2 id=启动>启动</h2><h3 id=启动测试>启动测试</h3><p>使用 <code>headscale serve</code> 测试能否正常运行，如果不行根据报错信息修改问题，确认无误后使用 systemctl 启动</p><h3 id=使用-systemctl-后台运行>使用 systemctl 后台运行</h3><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#998;font-style:italic>#　Reload SystemD 以加载新的配置文件：</span>
+
+systemctl daemon-reload
+
+<span style=color:#998;font-style:italic>#启动 Headscale 服务并设置开机自启：</span>
+
+systemctl <span style=color:#0086b3>enable</span> --now headscale
+
+<span style=color:#998;font-style:italic>#　查看运行状态：</span>
+
+systemctl status headscale
+</code></pre></td></tr></table></div></div><h2 id=验证>验证</h2><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#998;font-style:italic>#　查看运行状态：</span>
+
+systemctl status headscale
+
+<span style=color:#998;font-style:italic>#　查看占用端口：</span>
+
+ss -tulnp|grep headscale
+</code></pre></td></tr></table></div></div><h2 id=操作>操作</h2><p>headscale 中有个 namespace 的概念，用来区分不同用户的组网，之间不能互通，类似于多租户的概念</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#998;font-style:italic># 创建一个 namespace，以便后续客户端接入，例如：</span>
+headscale namespaces create default
+
+<span style=color:#998;font-style:italic># 查看命名空间：</span>
+
+headscale namespaces list
+</code></pre></td></tr></table></div></div><h1 id=安装-macos-客户端>安装 MacOS 客户端</h1><p>访问控制服务中配置的公网 ip 地址，&lt;公网 ip>:8080/apple，会出现一个页面。</p><p>找到 <a href=https://pkgs.tailscale.com/stable/#macos>macOS - Standalone Client </a>客户端并下载，这是一个 tailscale 的客户端，<strong>需要本机授权才能访问</strong>。</p><p>打开后会在顶部菜单栏中出现一个图标
+<img class=mx-auto alt=image-20230523111148146 src=https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2023-05-23-031222.png></p><h2 id=配置>配置</h2><p>打开终端，执行下面命令</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>defaults write io.tailscale.ipn.macsys ControlURL http://&lt;你的公网ip&gt;:8080
+</code></pre></td></tr></table></div></div><p>此时需要登录 tailscale，按住 alt 点击顶部的 tailscale 图标，会出现 debug 按钮
+<img class=mx-auto alt=image-20230523111842985 src=https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2023-05-23-031845.png></p><p>点击 debug-> login，将你的控制服务器地址填进去，&lt;公网 ip>:8080 并登录。</p><h2 id=认证>认证</h2><p>此时浏览器会弹出一个页面</p><p><img class=mx-auto alt=image-20230523112105457 src=https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2023-05-23-032108.png></p><p>拷贝并粘贴到控制服务器所在的机器，我这里是 ecs，在 ecs 终端执行</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>headscale nodes register --user 配置的namespace --key nodekey:fcb4522440ce686210
+</code></pre></td></tr></table></div></div><p>如果成功的话会有下面提示：</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>Machine 你的namespace registered
+</code></pre></td></tr></table></div></div><p>使用下面命令查看当前网络加入的节点</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh>headscale node list
+</code></pre></td></tr></table></div></div><h1 id=安装-linux-客户端>安装 Linux 客户端</h1><p>从 <a href=https://pkgs.tailscale.com/stable/>https://pkgs.tailscale.com/stable/</a> 找到你系统对应的版本</p><p><img class=mx-auto alt=image-20230523112734307 src=https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2023-05-23-032737.png></p><p>我的是 centos，直接粘贴官方文档上的命令就可以了。</p><h2 id=配置-1>配置</h2><p>启动</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#998;font-style:italic># 启动 tailscaled.service 并设置开机自启：</span>
+systemctl <span style=color:#0086b3>enable</span> --now tailscaled
+<span style=color:#998;font-style:italic># 查看服务状态：</span>
+systemctl status tailscaled
+</code></pre></td></tr></table></div></div><p>连接</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>tailscale up --login-server<span style=color:#000;font-weight:700>=</span>http://&lt;公网 ip&gt;:8080 --accept-routes<span style=color:#000;font-weight:700>=</span><span style=color:#0086b3>true</span> --accept-dns<span style=color:#000;font-weight:700>=</span><span style=color:#0086b3>false</span>
+<span style=color:#998;font-style:italic># 如果申请为虚拟网关，需要使用下面命令</span>
+<span style=color:#998;font-style:italic>#tailscale up --login-server=http://&lt;公网 ip&gt;:8080 --accept-routes=true --accept-dns=false --advertise-routes=&lt;当前节点 ip&gt;/24</span>
+<span style=color:#998;font-style:italic># 打开转发</span>
+<span style=color:#0086b3>echo</span> <span style=color:#d14>&#39;net.ipv4.ip_forward = 1&#39;</span> | tee /etc/sysctl.d/ipforwarding.conf
+<span style=color:#0086b3>echo</span> <span style=color:#d14>&#39;net.ipv6.conf.all.forwarding = 1&#39;</span> | tee -a /etc/sysctl.d/ipforwarding.conf
+sysctl -p /etc/sysctl.d/ipforwarding.conf
+</code></pre></td></tr></table></div></div><p>此时控制台会出现一个访问地址，拷贝出来用浏览器打开，会得到一串和上面 macos 认证一样命令，可以参考 macos 认证部分</p><h1 id=验证-1>验证</h1><p>此时局域网内有两个节点能够相互访问，可以使用 下面命令查询当前网段下的节点信息</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>headscale node list
+</code></pre></td></tr></table></div></div><p><img class=mx-auto alt=image-20230523113814723 src=https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2023-05-23-033816.png></p><p>我们可以使用 ping 命令相互 ping 一下，看是否能互通。</p><p><img class=mx-auto alt=image-20230523113906985 src=https://ahian-blog.oss-cn-beijing.aliyuncs.com/images/2023-05-23-033909.png></p></div><div class=post-archive><ul class=post-copyright><li><strong>原文作者：</strong><a rel=author href=https://www.ahianzhang.com>浮华生</a></li><li style=word-break:break-all><strong>原文链接：</strong><a href=https://www.ahianzhang.com/post/summary23/>https://www.ahianzhang.com/post/summary23/</a></li><li><strong>版权声明：</strong>本作品采用<a rel=license href=https://creativecommons.org/licenses/by-nc-nd/4.0/>知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li></ul></div><br><div class=post-archive><h2>See Also</h2><ul class=listing><li><a href=/post/elasticsearch04/>Kubernetes 部署 Elasticsearch 和 Kibana</a></li><li><a href=/post/summary21/>2022 年终总结</a></li><li><a href=/post/rabbit-network/>RabbitMQ connection channel 的关系</a></li><li><a href=/post/kafka-producer-analysis/>Kafka Java 客户端 Producer 原理分析</a></li><li><a href=/post/message-queue/>RabbitMQ 和 Kafka 应用原理简单对比</a></li></ul></div><div class="post-meta meta-tags"><ul class=clearfix><li><a href=/tags/%E7%BD%91%E7%BB%9C>网络</a></li></ul></div></article><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return;}
+var d=document,s=d.createElement('script');s.async=true;s.src='//'+"AhianZhang"+'.disqus.com/embed.js';s.setAttribute('data-timestamp',+new Date());(d.head||d.body).appendChild(s);})();</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><footer id=footer><div>&copy; 2023 <a href=https://www.ahianzhang.com>浮华生 By 浮华生</a></div><br><div><div class=github-badge><a href=https://gohugo.io/ target=_black rel=nofollow><span class=badge-subject>Powered by</span><span class="badge-value bg-blue">Hugo</span></a></div><div class=github-badge><a href=https://www.flysnow.org/ target=_black><span class=badge-subject>Design by</span><span class="badge-value bg-brightgreen">飞雪无情</span></a></div><div class=github-badge><a href=https://github.com/flysnow-org/maupassant-hugo target=_black><span class=badge-subject>Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a></div></div></footer><script type=text/javascript>window.MathJax={tex2jax:{inlineMath:[['$','$']],processEscapes:true}};</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script><a id=rocket href=#top></a><script type=text/javascript src="/js/totop.js?v=0.0.0" async></script><script type=text/javascript src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js async></script><script src=/js/douban.js></script></div><div id=secondary><section class=widget><form id=search action=https://www.ahianzhang.com/search/ method=get accept-charset=utf-8 target=_blank _lpchecked=1><input type=text name=q maxlength=20 placeholder=Search>
+<input type=hidden name=sitesearch value=https://www.ahianzhang.com>
+<button type=submit class="submit icon-search"></button></form></section><section class=widget><h3 class=widget-title>最近文章</h3><ul class=widget-list><li><a href=https://www.ahianzhang.com/post/summary23/ title=异地机器组网方案>异地机器组网方案</a></li><li><a href=https://www.ahianzhang.com/post/elasticsearch04/ title="Kubernetes 部署 Elasticsearch 和 Kibana">Kubernetes 部署 Elasticsearch 和 Kibana</a></li><li><a href=https://www.ahianzhang.com/post/summary21/ title="2022 年终总结">2022 年终总结</a></li><li><a href=https://www.ahianzhang.com/post/rabbit-network/ title="RabbitMQ connection channel 的关系">RabbitMQ connection channel 的关系</a></li><li><a href=https://www.ahianzhang.com/post/kafka-producer-analysis/ title="Kafka Java 客户端 Producer 原理分析">Kafka Java 客户端 Producer 原理分析</a></li><li><a href=https://www.ahianzhang.com/post/message-queue/ title="RabbitMQ 和 Kafka 应用原理简单对比">RabbitMQ 和 Kafka 应用原理简单对比</a></li><li><a href=https://www.ahianzhang.com/post/summary20/ title="阿里云 OpenSearch 介绍">阿里云 OpenSearch 介绍</a></li><li><a href=https://www.ahianzhang.com/post/golang-01/ title="Golang Array 和 Slice 区别">Golang Array 和 Slice 区别</a></li><li><a href=https://www.ahianzhang.com/post/summary19/ title="Mac OS 下打造 golang nvim 编程环境之基础配置">Mac OS 下打造 golang nvim 编程环境之基础配置</a></li><li><a href=https://www.ahianzhang.com/post/summary18/ title=电商搜索技术总结>电商搜索技术总结</a></li></ul></section><section class=widget><h3 class=widget-title><a href=/categories/>分类</a></h3><ul class=widget-list><li><a href=https://www.ahianzhang.com/categories/DDD/>DDD (1)</a></li><li><a href=https://www.ahianzhang.com/categories/DevOps/>DevOps (2)</a></li><li><a href=https://www.ahianzhang.com/categories/Golang/>Golang (2)</a></li><li><a href=https://www.ahianzhang.com/categories/TDD/>TDD (1)</a></li><li><a href=https://www.ahianzhang.com/categories/Vim/>Vim (1)</a></li><li><a href=https://www.ahianzhang.com/categories/XP/>XP (1)</a></li><li><a href=https://www.ahianzhang.com/categories/%E5%8D%8F%E8%AE%AE/>协议 (2)</a></li><li><a href=https://www.ahianzhang.com/categories/%E6%80%BB%E7%BB%93/>总结 (26)</a></li><li><a href=https://www.ahianzhang.com/categories/%E6%90%9C%E7%B4%A2/>搜索 (9)</a></li><li><a href=https://www.ahianzhang.com/categories/%E6%9E%B6%E6%9E%84/>架构 (17)</a></li><li><a href=https://www.ahianzhang.com/categories/%E7%AE%97%E6%B3%95/>算法 (6)</a></li></ul></section><section class=widget><h3 class=widget-title><a href=/tags/>标签</a></h3><div class=tagcloud><a href=https://www.ahianzhang.com/tags/BDD/>BDD</a>
+<a href=https://www.ahianzhang.com/tags/Cucumber/>Cucumber</a>
+<a href=https://www.ahianzhang.com/tags/ElasticSearch/>ElasticSearch</a>
+<a href=https://www.ahianzhang.com/tags/Kafka/>Kafka</a>
+<a href=https://www.ahianzhang.com/tags/LeetCode/>LeetCode</a>
+<a href=https://www.ahianzhang.com/tags/OpenSearch/>OpenSearch</a>
+<a href=https://www.ahianzhang.com/tags/RabbitMQ/>RabbitMQ</a>
+<a href=https://www.ahianzhang.com/tags/SpringCloud/>SpringCloud</a>
+<a href=https://www.ahianzhang.com/tags/cypress/>cypress</a>
+<a href=https://www.ahianzhang.com/tags/devops/>devops</a>
+<a href=https://www.ahianzhang.com/tags/macOS/>macOS</a>
+<a href=https://www.ahianzhang.com/tags/nat/>nat</a>
+<a href=https://www.ahianzhang.com/tags/os/>os</a>
+<a href=https://www.ahianzhang.com/tags/RabbitMQ/>RabbitMQ</a>
+<a href=https://www.ahianzhang.com/tags/rsocket/>rsocket</a>
+<a href=https://www.ahianzhang.com/tags/tor/>tor</a>
+<a href=https://www.ahianzhang.com/tags/%E5%88%9B%E4%B8%9A/>创业</a>
+<a href=https://www.ahianzhang.com/tags/%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/>工作总结</a>
+<a href=https://www.ahianzhang.com/tags/%E5%B9%B3%E5%8F%B0%E6%9E%B6%E6%9E%84/>平台架构</a>
+<a href=https://www.ahianzhang.com/tags/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/>年终总结</a>
+<a href=https://www.ahianzhang.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/>微服务</a>
+<a href=https://www.ahianzhang.com/tags/%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/>性能调优</a>
+<a href=https://www.ahianzhang.com/tags/%E6%80%BB%E7%BB%93/>总结</a>
+<a href=https://www.ahianzhang.com/tags/%E6%8A%80%E6%9C%AF/>技术</a>
+<a href=https://www.ahianzhang.com/tags/%E6%95%88%E7%8E%87/>效率</a>
+<a href=https://www.ahianzhang.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/>数据结构</a>
+<a href=https://www.ahianzhang.com/tags/%E6%96%B9%E6%A1%88/>方案</a>
+<a href=https://www.ahianzhang.com/tags/%E6%9E%81%E9%99%90%E7%BC%96%E7%A8%8B/>极限编程</a>
+<a href=https://www.ahianzhang.com/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/>概率论</a>
+<a href=https://www.ahianzhang.com/tags/%E6%A6%82%E8%BF%B0/>概述</a>
+<a href=https://www.ahianzhang.com/tags/%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/>测试工具</a>
+<a href=https://www.ahianzhang.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/>消息队列</a>
+<a href=https://www.ahianzhang.com/tags/%E7%90%86%E8%AE%BA/>理论</a>
+<a href=https://www.ahianzhang.com/tags/%E7%94%9F%E6%B4%BB%E6%80%BB%E7%BB%93/>生活总结</a>
+<a href=https://www.ahianzhang.com/tags/%E7%AE%97%E6%B3%95/>算法</a>
+<a href=https://www.ahianzhang.com/tags/%E7%BD%91%E7%BB%9C/>网络</a>
+<a href=https://www.ahianzhang.com/tags/%E8%A1%A5%E7%A0%81/>补码</a>
+<a href=https://www.ahianzhang.com/tags/%E8%AE%A1%E5%88%92/>计划</a>
+<a href=https://www.ahianzhang.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/>设计模式</a>
+<a href=https://www.ahianzhang.com/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/>面向对象</a>
+<a href=https://www.ahianzhang.com/tags/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/>项目总结</a></div></section><section class=widget><h3 class=widget-title>友情链接</h3><ul class=widget-list><li><a target=_blank href=https://taohuawu.club title="潘少的 BLOG">潘少的 BLOG</a></li><li><a target=_blank href=http://www.hankcs.com/ title=hankcs>hankcs</a></li><li><a target=_blank href=https://www.shenyanchao.cn/ title=申艳超博客>申艳超</a></li></ul></section><section class=widget><h3 class=widget-title>其它</h3><ul class=widget-list><li><a href=https://www.ahianzhang.com/index.xml>文章 RSS</a></li></ul></section></div></div></div></div></body></html>
