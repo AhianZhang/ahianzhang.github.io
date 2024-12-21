@@ -1,0 +1,124 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=referrer content="no-referrer-when-downgrade"><title>Elasticsearch 检索性能优化 | 浮华生</title><meta property="og:title" content="Elasticsearch 检索性能优化 - 浮华生"><meta property="og:type" content="article"><meta property="article:published_time" content="2024-12-20T15:07:28+08:00"><meta property="article:modified_time" content="2024-12-20T15:07:28+08:00"><meta name=Keywords content="Java 敏捷搜索推荐 Golang"><meta name=description content="Elasticsearch 检索性能优化"><meta name=author content="浮华生"><meta property="og:url" content="https://www.ahianzhang.com/post/elasticsearch-05/"><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><link rel=stylesheet href=/css/normalize.css><link rel=stylesheet href=/css/style.css><script type=text/javascript src=//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js></script><link rel=stylesheet href=/css/douban.css><link rel=stylesheet href=/css/other.css><link rel=stylesheet href=/css/custom.css></head><body><header id=header class=clearfix><div class=container><div class=col-group><div class=site-name><a id=logo href=https://www.ahianzhang.com>浮华生</a><p class=description>大道至简</p></div><div><nav id=nav-menu class=clearfix><a class=current href=https://www.ahianzhang.com>首页</a>
+<a href=https://www.ahianzhang.com/search-recommend/ title="搜索 && 推荐">搜索 && 推荐</a>
+<a href=https://www.ahianzhang.com/archives/ title=归档>归档</a>
+<a href=https://www.ahianzhang.com/about/ title=关于>关于</a></nav></div></div></div></header><div id=body><div class=container><div class=col-group><div class=col-8 id=main><div class=res-cons><style type=text/css>.post-toc{position:fixed;width:200px;margin-left:-210px;padding:5px 10px;font-family:Athelas,STHeiti,Microsoft Yahei,serif;font-size:12px;border:1px solid rgba(0,0,0,.07);border-radius:5px;background-color:rgba(255,255,255,.98);background-clip:padding-box;-webkit-box-shadow:1px 1px 2px rgba(0,0,0,.125);box-shadow:1px 1px 2px rgba(0,0,0,.125);word-wrap:break-word;white-space:nowrap;-webkit-box-sizing:border-box;box-sizing:border-box;z-index:999;cursor:pointer;max-height:70%;overflow-y:auto;overflow-x:hidden}.post-toc .post-toc-title{width:100%;margin:0 auto;font-size:20px;font-weight:400;text-transform:uppercase;text-align:center}.post-toc .post-toc-content{font-size:15px}.post-toc .post-toc-content>nav>ul{margin:10px 0}.post-toc .post-toc-content ul{padding-left:20px;list-style:square;margin:.5em;line-height:1.8em}.post-toc .post-toc-content ul ul{padding-left:15px;display:none}@media print,screen and (max-width:1057px){.post-toc{display:none}}</style><div class=post-toc style=position:absolute;top:188px><h2 class=post-toc-title>文章目录</h2><div class=post-toc-content><nav id=TableOfContents><ul><li><a href=#索引优化>索引优化</a><ul><li><a href=#设置-indexfalse>设置 <code>index:false</code></a></li><li><a href=#设置-shard-数>设置 shard 数</a></li><li><a href=#禁用-dynamic-mapping>禁用 Dynamic Mapping</a></li><li><a href=#慎用复杂结构>慎用复杂结构</a></li><li><a href=#使用-copy_to>使用 <code>copy_to</code></a></li><li><a href=#预处理>预处理</a></li><li><a href=#使用-keyword>使用 Keyword</a></li><li><a href=#段合并>段合并</a></li></ul></li><li><a href=#集群配置>集群配置</a><ul><li><a href=#合理设置-node-的角色>合理设置 node 的角色</a></li><li><a href=#合理分配-node-的资源>合理分配 node 的资源</a></li></ul></li><li><a href=#查询优化>查询优化</a><ul><li><a href=#显式设置返回字段>显式设置返回字段</a></li><li><a href=#使用-filter-查询>使用 filter 查询</a></li><li><a href=#不要一次性返回大集合>不要一次性返回大集合</a></li><li><a href=#高亮后置处理>高亮后置处理</a></li><li><a href=#慎用-script>慎用 Script</a></li></ul></li></ul></nav></div></div><script type=text/javascript>$(document).ready(function(){var postToc=$(".post-toc");if(postToc.length){var leftPos=$("#main").offset().left;if(leftPos<220){postToc.css({"width":leftPos-10,"margin-left":(0-leftPos)})}
+var t=postToc.offset().top-20,a={start:{position:"absolute",top:t},process:{position:"fixed",top:20},};$(window).scroll(function(){var e=$(window).scrollTop();e<t?postToc.css(a.start):postToc.css(a.process)})}})</script><article class=post><header><h1 class=post-title>Elasticsearch 检索性能优化</h1></header><date class="post-meta meta-date">2024年12月20日</date><div class=post-meta><span>|</span>
+<span class=meta-category><a href=/categories/%E6%90%9C%E7%B4%A2>搜索</a></span>
+<span class=meta-category><a href=/categories/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96>性能优化</a></span></div><div class=post-meta><span id=busuanzi_container_page_pv>|<span id=busuanzi_value_page_pv></span><span>
+阅读</span></span></div><div class=post-content><h1 id=前言>前言</h1><p>ElasticSearch 是当前使用场景比较多的全文检索数据库，可以用到搜广推业务、日志监控、数据可视化等。既然是数据库就无法避免的会遇到查询性能问题，本篇文章主要介绍从索引设计、集群配置、查询三个方面进行优化。</p><h2 id=索引优化>索引优化</h2><h3 id=设置-indexfalse>设置 <code>index:false</code></h3><p>适用场景：对没有检索和过滤需求的并且后续不会更新的字段，这个设置只是不建立索引，实际数据还是会进行存储，在查询时可以通过 <code>_source</code> 进行返回。</p><h3 id=设置-shard-数>设置 shard 数</h3><p>基础概念可以参考<a href=https://www.ahianzhang.com/post/elastic-search/>之前的文章</a></p><p>简单讲一下 shard 的开销，shard 分为主分片和副本分片两种，那如果 shard 数越多，需要的同步时间就会越久，检索时会发生数据短暂不一致情况，并且同步的成本及稳定性也会受影响；shard 越多需要分配的内存和 CPU 也就越多，如果并发量大的话会将 node 的线程池耗尽，从而降低吞吐量。</p><p>官方推荐，理论上一个 shard 可以存储 <strong>20 亿文档</strong>，或者 <strong>10G-50G</strong> 之间的数据，如果你的数据在这两个范围内，可以直接使用一个 shard 进行检索。</p><h3 id=禁用-dynamic-mapping>禁用 Dynamic Mapping</h3><p>使用确定的映射，不要让 ES 自己推断，这个在日常设计中都会注意。</p><h3 id=慎用复杂结构>慎用复杂结构</h3><p>官方指出，nested 结构查询会让搜索慢几倍，而 parent-child 会让搜索慢上百倍！</p><h3 id=使用-copy_to>使用 <code>copy_to</code></h3><p>把经常要组合搜索的放到同一个字段中，比如要同时在文章标题、正文中查找，那可以做如下设置：</p><pre><code>{
+  &quot;mappings&quot;: {
+    &quot;properties&quot;: {
+      &quot;full-text&quot;: { // 只需要用这个字段进行搜索
+        &quot;type&quot;: &quot;text&quot;
+      },
+      &quot;title&quot;: {
+        &quot;type&quot;: &quot;text&quot;,
+        &quot;copy_to&quot;: &quot;name_and_plot&quot;
+      },
+      &quot;content&quot;: {
+        &quot;type&quot;: &quot;text&quot;,
+        &quot;copy_to&quot;: &quot;name_and_plot&quot;
+      }
+    }
+  }
+}
+</code></pre><h3 id=预处理>预处理</h3><p>比如日期，2024-12-22 10:00:00，我们可以拆成多个字段进行存储</p><pre><code>{
+  &quot;mappings&quot;: {
+    &quot;properties&quot;: {
+      &quot;published&quot;: { 
+        &quot;type&quot;: &quot;date&quot;
+      },
+      &quot;year&quot;: { 
+        &quot;type&quot;: &quot;keyword&quot;
+      },
+      &quot;month&quot;: {
+        &quot;type&quot;: &quot;keyword&quot;,
+        
+      },
+      &quot;day&quot;: {
+        &quot;type&quot;: &quot;keyword&quot;,
+      }
+    }
+  }
+}
+</code></pre><h3 id=使用-keyword>使用 Keyword</h3><p>对于不需要范围查询的，比如身份证号、ISBN 这种，要使用 Keyword 类型存储，因为 keyword 查询要比数值类型的速度快。</p><h3 id=段合并>段合并</h3><p>此操作对经常变更的索引没有太大帮助，但是如果已经不会再变的数据，比如昨日的数据，使用段合并能提高查询效率。</p><h2 id=集群配置>集群配置</h2><h3 id=合理设置-node-的角色>合理设置 node 的角色</h3><p>ES 中的 node 分为</p><ul><li>Master Node：负责管理集群的元数据和控制集群的状态，例如索引创建、分片分配等（保证集群高可用和稳定性，不存储数据）</li><li>Data Node：存储实际的数据和实际的查询请求（存储和计算）</li><li>Coordinating：协调节点，负责搜索和聚合的请求分发和结果合并，不存储数据，类似于微服务中的服务编排。</li><li>Ingest：数据预处理节点，如果数据处理操作在代码中完成，这个可以不设计。</li></ul><ol><li>在生产和测试环境要显式设置集群角色，不要混用，配置项：<code>node.roles</code></li><li>对于 Master 角色，设置奇数个，避免脑裂问题</li></ol><h3 id=合理分配-node-的资源>合理分配 node 的资源</h3><h4 id=master-节点>Master 节点</h4><p>master 只负责集群的管理，所以不需要太多的资源</p><pre><code># JVM 堆内存配置
+-Xms4g
+-Xmx4g
+
+# 系统配置
+CPU: 4-8 核
+内存: 8GB
+磁盘: 普通 SATA 即可，100GB
+</code></pre><p>原因：</p><ul><li>主要处理集群状态管理，不需要太大内存</li><li>集群元数据相对较小</li><li>需要稳定的 CPU 处理能力</li><li>磁盘 I/O 要求不高</li></ul><h4 id=data-节点>Data 节点</h4><p>数据节点要重点关照</p><pre><code># JVM 堆内存配置
+-Xms31g
+-Xmx31g  # 保持在32GB以下，避免指针压缩失效
+
+# 系统配置
+*CPU: 8-32 核
+*内存: 64GB+
+**磁盘: SSD，500GB+
+</code></pre><p>原因：</p><ul><li>需要大内存做缓存</li><li>需要留足够系统内存给 Lucene 文件系统缓存</li><li>多核 CPU 有利于并行处理</li><li>SSD 提高随机 I/O 性能</li></ul><p>指针压缩会降低存储成本，能够让 CPU 加载更多的对象引用，提高 CPU 缓存命中率。最新的 JDK 24 版本中对此做了优化 <a href=%5Bhttps://www.infoq.com/news/2024/11/compact-headers-java24/>文章地址</a></p><p>堆内存的大小不要超过物理内存的 50%，剩下空间的主要给 Lucene 用来做缓存。也就是说 JVM 配置了 31 G，那么物理内存至少是 64 G。</p><h4 id=coordinating-节点>Coordinating 节点</h4><pre><code># JVM 堆内存配置
+-Xms16g
+-Xmx16g
+
+# 系统配置
+*CPU: 8-16 核
+*内存: 32GB
+磁盘: 普通 SATA，200GB
+</code></pre><p>原因：</p><ul><li>需要足够内存做查询缓存</li><li>需要较强 CPU 处理聚合计算</li><li>磁盘要求不高</li></ul><h2 id=查询优化>查询优化</h2><h3 id=显式设置返回字段>显式设置返回字段</h3><p>对应业务无关的数据可以在查询时使用<code> _source</code> 进行设置</p><pre><code>&quot;_source&quot;: {
+  &quot;includes&quot;: [&quot;field1&quot;, &quot;field2&quot;]
+}
+</code></pre><h3 id=使用-filter-查询>使用 filter 查询</h3><p>对于复杂的查询条件并且不需要排序的场景，要使用 filter+bool 的方式</p><pre><code>{
+  &quot;query&quot;: {
+    &quot;bool&quot;: {
+      &quot;filter&quot;: [
+        {&quot;term&quot;: {&quot;userLevel&quot;: &quot;PGC&quot;}}
+      ]
+    }
+  }
+}
+</code></pre><h3 id=不要一次性返回大集合>不要一次性返回大集合</h3><p>如果需要数据导出可以使用 Scroll 或者 SearchAfter，每次条数可以根据实际的文档大小进行设置，要权衡吞吐量和服务稳定性。</p><h3 id=高亮后置处理>高亮后置处理</h3><p>在程序代码中进行筛选和飘红处理，简单讲就是将查询 keyword 分词，然后遍历返回内容，如果匹配到就飘红处理。</p><h3 id=慎用-script>慎用 Script</h3><p>脚本查询虽然使用灵活，但是因为需要动态计算，会降低整体的性能</p><h1 id=总结>总结</h1><p>ES 性能优化是一个非常复杂的事情，需要从物理字段、JVM、索引、查询等方面进行综合考虑，上面给出只是优化的一些手段和建议，在实战时还需要具体问题具体分析。在做方案设计时早期要考虑的详细一些，确定集群的规格参数，因为后期物理层面的成本会很大。</p><h1 id=参考文章>参考文章</h1><p><a href=https://www.elastic.co/guide/en/elasticsearch/reference/8.17/size-your-shards.html#each-shard-has-overhead>https://www.elastic.co/guide/en/elasticsearch/reference/8.17/size-your-shards.html#each-shard-has-overhead</a></p><p><a href=https://www.elastic.co/guide/en/elasticsearch/reference/8.17/tune-for-search-speed.html>https://www.elastic.co/guide/en/elasticsearch/reference/8.17/tune-for-search-speed.html</a></p></div><div class=post-archive><ul class=post-copyright><li><strong>原文作者：</strong><a rel=author href=https://www.ahianzhang.com>浮华生</a></li><li style=word-break:break-all><strong>原文链接：</strong><a href=https://www.ahianzhang.com/post/elasticsearch-05/>https://www.ahianzhang.com/post/elasticsearch-05/</a></li><li><strong>版权声明：</strong>本作品采用<a rel=license href=https://creativecommons.org/licenses/by-nc-nd/4.0/>知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li></ul></div><br><div class=post-archive><h2>See Also</h2><ul class=listing><li><a href=/post/elasticsearch04/>Kubernetes 部署 Elasticsearch 和 Kibana</a></li><li><a href=/post/elasticsearch03/>ElasticSearch API 基本操作</a></li><li><a href=/post/elasticsearch02/>elasticsearch 集群容错</a></li><li><a href=/post/elastic-search/>ElasticSearch 基础概念</a></li><li><a href=/post/yuqing-01/>舆情监控系统综述</a></li></ul></div><div class="post-meta meta-tags"><ul class=clearfix><li><a href=/tags/ElasticSearch>ElasticSearch</a></li></ul></div></article><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return;}
+var d=document,s=d.createElement('script');s.async=true;s.src='//'+"AhianZhang"+'.disqus.com/embed.js';s.setAttribute('data-timestamp',+new Date());(d.head||d.body).appendChild(s);})();</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><footer id=footer><div>&copy; 2024 <a href=https://www.ahianzhang.com>浮华生 By 浮华生</a></div><br><div><div class=github-badge><a href=https://gohugo.io/ target=_black rel=nofollow><span class=badge-subject>Powered by</span><span class="badge-value bg-blue">Hugo</span></a></div><div class=github-badge><a href=https://www.flysnow.org/ target=_black><span class=badge-subject>Design by</span><span class="badge-value bg-brightgreen">飞雪无情</span></a></div><div class=github-badge><a href=https://github.com/flysnow-org/maupassant-hugo target=_black><span class=badge-subject>Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a></div></div></footer><script type=text/javascript>window.MathJax={tex2jax:{inlineMath:[['$','$']],processEscapes:true}};</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script><a id=rocket href=#top></a><script type=text/javascript src="/js/totop.js?v=0.0.0" async></script><script type=text/javascript src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js async></script><script src=/js/douban.js></script></div><div id=secondary><section class=widget><form id=search action=https://www.ahianzhang.com/search/ method=get accept-charset=utf-8 target=_blank _lpchecked=1><input type=text name=q maxlength=20 placeholder=Search>
+<input type=hidden name=sitesearch value=https://www.ahianzhang.com>
+<button type=submit class="submit icon-search"></button></form></section><section class=widget><h3 class=widget-title>最近文章</h3><ul class=widget-list><li><a href=https://www.ahianzhang.com/post/elasticsearch-05/ title="Elasticsearch 检索性能优化">Elasticsearch 检索性能优化</a></li><li><a href=https://www.ahianzhang.com/post/yuqing-01/ title=舆情监控系统综述>舆情监控系统综述</a></li><li><a href=https://www.ahianzhang.com/post/summary25/ title="2024 半年度总结">2024 半年度总结</a></li><li><a href=https://www.ahianzhang.com/post/summary24/ title="2023 年终总结">2023 年终总结</a></li><li><a href=https://www.ahianzhang.com/post/summary23/ title=异地机器组网方案>异地机器组网方案</a></li><li><a href=https://www.ahianzhang.com/post/elasticsearch04/ title="Kubernetes 部署 Elasticsearch 和 Kibana">Kubernetes 部署 Elasticsearch 和 Kibana</a></li><li><a href=https://www.ahianzhang.com/post/summary21/ title="2022 年终总结">2022 年终总结</a></li><li><a href=https://www.ahianzhang.com/post/rabbit-network/ title="RabbitMQ connection channel 的关系">RabbitMQ connection channel 的关系</a></li><li><a href=https://www.ahianzhang.com/post/kafka-producer-analysis/ title="Kafka Java 客户端 Producer 原理分析">Kafka Java 客户端 Producer 原理分析</a></li><li><a href=https://www.ahianzhang.com/post/message-queue/ title="RabbitMQ 和 Kafka 应用原理简单对比">RabbitMQ 和 Kafka 应用原理简单对比</a></li></ul></section><section class=widget><h3 class=widget-title><a href=/categories/>分类</a></h3><ul class=widget-list><li><a href=https://www.ahianzhang.com/categories/DDD/>DDD (1)</a></li><li><a href=https://www.ahianzhang.com/categories/DevOps/>DevOps (2)</a></li><li><a href=https://www.ahianzhang.com/categories/Golang/>Golang (2)</a></li><li><a href=https://www.ahianzhang.com/categories/TDD/>TDD (1)</a></li><li><a href=https://www.ahianzhang.com/categories/Vim/>Vim (1)</a></li><li><a href=https://www.ahianzhang.com/categories/XP/>XP (1)</a></li><li><a href=https://www.ahianzhang.com/categories/%E5%8D%8F%E8%AE%AE/>协议 (2)</a></li><li><a href=https://www.ahianzhang.com/categories/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/>性能优化 (1)</a></li><li><a href=https://www.ahianzhang.com/categories/%E6%80%BB%E7%BB%93/>总结 (28)</a></li><li><a href=https://www.ahianzhang.com/categories/%E6%90%9C%E7%B4%A2/>搜索 (10)</a></li><li><a href=https://www.ahianzhang.com/categories/%E6%9E%B6%E6%9E%84/>架构 (17)</a></li><li><a href=https://www.ahianzhang.com/categories/%E7%AE%97%E6%B3%95/>算法 (6)</a></li><li><a href=https://www.ahianzhang.com/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/>系统设计 (1)</a></li></ul></section><section class=widget><h3 class=widget-title><a href=/tags/>标签</a></h3><div class=tagcloud><a href=https://www.ahianzhang.com/tags/BDD/>BDD</a>
+<a href=https://www.ahianzhang.com/tags/Cucumber/>Cucumber</a>
+<a href=https://www.ahianzhang.com/tags/ElasticSearch/>ElasticSearch</a>
+<a href=https://www.ahianzhang.com/tags/Kafka/>Kafka</a>
+<a href=https://www.ahianzhang.com/tags/LeetCode/>LeetCode</a>
+<a href=https://www.ahianzhang.com/tags/OpenSearch/>OpenSearch</a>
+<a href=https://www.ahianzhang.com/tags/RabbitMQ/>RabbitMQ</a>
+<a href=https://www.ahianzhang.com/tags/SpringCloud/>SpringCloud</a>
+<a href=https://www.ahianzhang.com/tags/cypress/>cypress</a>
+<a href=https://www.ahianzhang.com/tags/devops/>devops</a>
+<a href=https://www.ahianzhang.com/tags/macOS/>macOS</a>
+<a href=https://www.ahianzhang.com/tags/nat/>nat</a>
+<a href=https://www.ahianzhang.com/tags/os/>os</a>
+<a href=https://www.ahianzhang.com/tags/RabbitMQ/>RabbitMQ</a>
+<a href=https://www.ahianzhang.com/tags/rsocket/>rsocket</a>
+<a href=https://www.ahianzhang.com/tags/tor/>tor</a>
+<a href=https://www.ahianzhang.com/tags/%E5%88%9B%E4%B8%9A/>创业</a>
+<a href=https://www.ahianzhang.com/tags/%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/>工作总结</a>
+<a href=https://www.ahianzhang.com/tags/%E5%B9%B3%E5%8F%B0%E6%9E%B6%E6%9E%84/>平台架构</a>
+<a href=https://www.ahianzhang.com/tags/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/>年终总结</a>
+<a href=https://www.ahianzhang.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/>微服务</a>
+<a href=https://www.ahianzhang.com/tags/%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/>性能调优</a>
+<a href=https://www.ahianzhang.com/tags/%E6%80%BB%E7%BB%93/>总结</a>
+<a href=https://www.ahianzhang.com/tags/%E6%8A%80%E6%9C%AF/>技术</a>
+<a href=https://www.ahianzhang.com/tags/%E6%95%88%E7%8E%87/>效率</a>
+<a href=https://www.ahianzhang.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/>数据结构</a>
+<a href=https://www.ahianzhang.com/tags/%E6%96%B9%E6%A1%88/>方案</a>
+<a href=https://www.ahianzhang.com/tags/%E6%9E%81%E9%99%90%E7%BC%96%E7%A8%8B/>极限编程</a>
+<a href=https://www.ahianzhang.com/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/>概率论</a>
+<a href=https://www.ahianzhang.com/tags/%E6%A6%82%E8%BF%B0/>概述</a>
+<a href=https://www.ahianzhang.com/tags/%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/>测试工具</a>
+<a href=https://www.ahianzhang.com/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/>消息队列</a>
+<a href=https://www.ahianzhang.com/tags/%E7%90%86%E8%AE%BA/>理论</a>
+<a href=https://www.ahianzhang.com/tags/%E7%94%9F%E6%B4%BB%E6%80%BB%E7%BB%93/>生活总结</a>
+<a href=https://www.ahianzhang.com/tags/%E7%AE%97%E6%B3%95/>算法</a>
+<a href=https://www.ahianzhang.com/tags/%E7%BD%91%E7%BB%9C/>网络</a>
+<a href=https://www.ahianzhang.com/tags/%E8%88%86%E6%83%85/>舆情</a>
+<a href=https://www.ahianzhang.com/tags/%E8%A1%A5%E7%A0%81/>补码</a>
+<a href=https://www.ahianzhang.com/tags/%E8%AE%A1%E5%88%92/>计划</a>
+<a href=https://www.ahianzhang.com/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/>设计模式</a>
+<a href=https://www.ahianzhang.com/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/>面向对象</a>
+<a href=https://www.ahianzhang.com/tags/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/>项目总结</a></div></section><section class=widget><h3 class=widget-title>友情链接</h3><ul class=widget-list><li><a target=_blank href=https://taohuawu.club title="潘少的 BLOG">潘少的 BLOG</a></li><li><a target=_blank href=http://www.hankcs.com/ title=hankcs>hankcs</a></li><li><a target=_blank href=https://www.shenyanchao.cn/ title=申艳超博客>申艳超</a></li></ul></section><section class=widget><h3 class=widget-title>其它</h3><ul class=widget-list><li><a href=https://www.ahianzhang.com/index.xml>文章 RSS</a></li></ul></section></div></div></div></div></body></html>
